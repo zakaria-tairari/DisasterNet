@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import AdminDashboard from "./pages/AdminDashboard";
 import OperatorDashboard from "./pages/OperatorDashboard";
 import TeamDashboard from "./pages/TeamDashboard";
+import AuthMiddleware from "./middlewares/AuthMiddleware";
 
 function App() {
   return (
@@ -13,11 +14,23 @@ function App() {
       <Header />
       <main className="flex-1">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Report />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/operator" element={<OperatorDashboard />} />
-          <Route path="/team" element={<TeamDashboard />} />
+
+          <Route element={<AuthMiddleware role="admin" />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Route>
+
+          <Route element={<AuthMiddleware role="operator" />}>
+            <Route path="/operator" element={<OperatorDashboard />} />
+          </Route>
+
+          <Route element={<AuthMiddleware role="team" />}>
+            <Route path="/team" element={<TeamDashboard />} />
+          </Route>
+            
+          
         </Routes>
       </main>
       <Footer />

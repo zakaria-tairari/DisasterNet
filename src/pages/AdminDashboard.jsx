@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import DashboardShell from "../components/DashboardShell";
 import MetricCard from "../components/MetricCard";
 import StatusBadge from "../components/StatusBadge";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import RoleSelector from "../components/RoleSelector";
+import CreateUserForm from "../components/admin/CreateUserForm";
+import AltButton from "../components/AltButton";
 
 // Mock data so the UI looks alive.
 // Replace these with Firestore collections later.
@@ -40,11 +43,12 @@ const MOCK_ACCOUNTS = [
   { id: "T-401", name: "Team Atlas 03", role: "Field Team", region: "Casablanca‑Settat" },
 ];
 
+
 const AdminDashboard = () => {
+
   return (
     <DashboardShell
       title="National oversight dashboard"
-      description="Monitor incidents and manage operator / field team accounts for all Moroccan regions."
     >
       {/* Top stats */}
       <section className="grid md:grid-cols-3 gap-4">
@@ -147,46 +151,18 @@ const AdminDashboard = () => {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="text-[11px] px-2 py-1 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800">
+                  <AltButton variant="info">
                     Edit
-                  </button>
-                  <button className="text-[11px] px-2 py-1 rounded-lg border border-red-600/60 text-red-300 hover:bg-red-600/10">
+                  </AltButton>
+                  <AltButton variant="danger">
                     Delete
-                  </button>
+                  </AltButton>
                 </div>
               </div>
             ))}
           </div>
         </div>
-
-        <div className="rounded-xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-100">
-            Create new account
-          </h2>
-          <p className="text-[11px] text-slate-400">
-            In your Firebase implementation, this form should create a user in
-            Auth and store role / region in Firestore or custom claims.
-          </p>
-
-          <form className="space-y-3">
-            <Input placeholder="Full name" />
-            <Input placeholder="Email" />
-            <select className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="">Select role</option>
-              <option value="admin">Admin</option>
-              <option value="operator">Operator</option>
-              <option value="team">Field team</option>
-            </select>
-            <select className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="">Region (optional for admin)</option>
-              <option value="casablanca">Casablanca‑Settat</option>
-              <option value="rabat">Rabat‑Salé‑Kénitra</option>
-              <option value="marrakech">Marrakech‑Safi</option>
-              <option value="tangier">Tanger‑Tétouan‑Al Hoceïma</option>
-            </select>
-            <Button type="submit">Create Account</Button>
-          </form>
-        </div>
+        <CreateUserForm />
       </section>
     </DashboardShell>
   );

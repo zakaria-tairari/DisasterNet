@@ -26,7 +26,6 @@ const TeamDashboard = () => {
   return (
     <DashboardShell
       title="Field team missions"
-      description="View the incidents assigned to your team and update status as you progress through the mission."
     >
       <section className="grid md:grid-cols-[1.5fr,1fr] gap-5">
         <div className="space-y-3">

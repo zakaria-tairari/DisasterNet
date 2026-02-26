@@ -1,18 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import SocialButton from "../components/SocialButton";
+import RoleSelector from "../components/RoleSelector";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { user, loading } = useContext(AuthContext);
   const [role, setRole] = useState("operator");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // Submit handler intentionally does not perform any auth
-  // or navigation so you can plug in your own Firebase
-  // logic later.
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // TODO: Replace with Firebase Auth (signInWithEmailAndPassword,
-    // signInWithPopup, etc.) and redirect based on the resolved role.
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(`/${user.role}`, { replace: true });
+    }
+  }, [user, loading]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
@@ -30,27 +46,7 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Role selector so one login screen works for all roles */}
-        <div className="grid grid-cols-3 gap-2 text-xs font-medium bg-slate-800/80 rounded-xl p-1">
-          {[
-            { id: "admin", label: "Admin" },
-            { id: "operator", label: "Operator" },
-            { id: "team", label: "Field Team" },
-          ].map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              onClick={() => setRole(option.id)}
-              className={`px-3 py-2 rounded-lg transition text-center ${
-                role === option.id
-                  ? "bg-emerald-400 text-slate-900 shadow-sm"
-                  : "text-slate-300 hover:bg-slate-700/70"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+        <RoleSelector onChange={setRole} role={role} />
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <Input
@@ -58,12 +54,16 @@ const Login = () => {
             label="Email"
             type="email"
             placeholder="operator@protectioncivile.ma"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
           <Input
             id="password"
             label="Password"
             type="password"
             placeholder="Enter your password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
 
           <div className="flex items-center justify-between text-xs">
@@ -95,7 +95,6 @@ const Login = () => {
           </div>
 
           <div className="flex gap-4">
-            {/* Ideal place to plug in Firebase Google Auth */}
             <SocialButton>
               <span className="mr-2">🌐</span>
               Sign in with Google

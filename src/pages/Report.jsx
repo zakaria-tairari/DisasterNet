@@ -73,7 +73,7 @@ const Report = () => {
                 id="region"
                 className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
-                <option value="" disabled >Select your region</option>
+                <option value="" disabled selected>Select your region</option>
                 <option value="casablanca">Casablanca‑Settat</option>
                 <option value="rabat">Rabat‑Salé‑Kénitra</option>
                 <option value="marrakech">Marrakech‑Safi</option>
@@ -99,7 +99,7 @@ const Report = () => {
                 id="incidentType"
                 className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
-                <option value="">Choose a category</option>
+                <option value="" disabled selected>Choose a category</option>
                 <option value="flood">Flood</option>
                 <option value="fire">Fire</option>
                 <option value="traffic">Traffic accident</option>
@@ -149,7 +149,7 @@ const Report = () => {
 
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-3 border-t border-slate-800">
             <div className="flex items-start gap-2 text-[11px] text-slate-400">
-              <span className="mt-1 h-4 w-4 rounded-full border border-emerald-400 text-[10px] flex items-center justify-center text-emerald-300">
+              <span className="mt-1 h-6 w-8 rounded-full border border-emerald-400 text-[12px] flex items-center justify-center text-emerald-300">
                 i
               </span>
               <p>

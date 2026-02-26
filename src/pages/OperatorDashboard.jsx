@@ -51,7 +51,6 @@ const OperatorDashboard = () => {
   return (
     <DashboardShell
       title="Regional operator console"
-      description="Validate citizen reports, prioritize by severity, and assign the right field teams in your region."
     >
       {/* Operator summary */}
       <section className="grid md:grid-cols-3 gap-4">
