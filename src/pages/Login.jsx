@@ -8,6 +8,8 @@ import { auth } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import ErrorMessage from "../components/ErrorMessage";
+import { getFirebaseErrorMessage } from "../lib/firebaseErrors";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ const Login = () => {
   const [role, setRole] = useState("operator");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!loading && user) {
@@ -24,24 +27,31 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      setErrorMessage("All fields are required");
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.error(error.message);
+      const message = getFirebaseErrorMessage(error.code);
+      console.log(error.code);
+      setErrorMessage(message);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-slate-950 flex items-center justify-center px-4 py-8">
-      <div className="max-w-md w-full bg-slate-900/70 backdrop-blur-xl border border-slate-700/60 shadow-2xl rounded-2xl p-8 space-y-7">
+    <div className="min-h-[calc(100vh-8rem)]  bg-slate-950 flex items-center justify-center px-4 py-8">
+      <div className="max-w-md w-full  bg-slate-900/70 backdrop-blur-xl border  border-slate-700/60 shadow-2xl rounded-2xl p-8 space-y-7">
         <div className="space-y-2 text-center">
           <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/80">
             Disasternet • Morocco
           </p>
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold  text-white">
             Secure Operations Login
           </h2>
-          <p className="text-sm text-slate-300/80">
+          <p className="text-sm  text-slate-300/80">
             Access your real-time incident coordination dashboards.
           </p>
         </div>
@@ -52,10 +62,10 @@ const Login = () => {
           <Input
             id="email"
             label="Email"
-            type="email"
+            type="text"
             placeholder="operator@protectioncivile.ma"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => {setEmail(e.target.value); setErrorMessage("");}}
           />
           <Input
             id="password"
@@ -63,24 +73,19 @@ const Login = () => {
             type="password"
             placeholder="Enter your password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={e => {setPassword(e.target.value); setErrorMessage("")}}
           />
 
           <div className="flex items-center justify-between text-xs">
-            <label className="inline-flex items-center gap-2 text-slate-300">
+            <label className="inline-flex items-center gap-2  text-slate-300">
               <input
                 type="checkbox"
-                className="h-3.5 w-3.5 rounded border-slate-600 bg-slate-900 text-emerald-400 focus:ring-emerald-500"
+                className="h-3.5 w-3.5 rounded border-slate-600  bg-slate-900 text-emerald-400 focus:ring-emerald-500"
               />
               Remember this device
             </label>
-            <button
-              type="button"
-              className="text-emerald-400 hover:text-emerald-300 font-medium"
-            >
-              Forgot password?
-            </button>
           </div>
+          <ErrorMessage message={errorMessage} />
 
           <Button type="submit">Sign In to Dashboard</Button>
         </form>

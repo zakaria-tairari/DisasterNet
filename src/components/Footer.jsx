@@ -4,10 +4,10 @@ import React from "react";
 // contact details and a short tagline.
 const Footer = () => {
   return (
-    <footer className="bg-slate-950 text-slate-300 border-t border-slate-800">
+    <footer className=" bg-slate-950 text-slate-300 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm">
         <div className="leading-tight">
-            <p className="font-semibold tracking-wide text-white">
+            <p className="font-semibold text-lg tracking-wide text-white">
               Disaster<span className="text-emerald-400">Net</span>
             </p>
             <p className="text-[11px] text-slate-400">

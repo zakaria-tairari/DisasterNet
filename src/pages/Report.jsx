@@ -18,7 +18,7 @@ const Report = () => {
   };
 
   return (
-    <div className="bg-slate-950 min-h-[calc(100vh-8rem)] text-slate-50">
+    <div className=" bg-slate-950 min-h-[calc(100vh-8rem)] text-slate-50">
       <div className="max-w-4xl mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 space-y-3">
           <p className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.25em] text-emerald-400">
@@ -27,7 +27,7 @@ const Report = () => {
           <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
             Report an emergency
           </h1>
-          <p className="text-sm md:text-base text-slate-300 max-w-2xl">
+          <p className="text-sm md:text-base  text-slate-300 max-w-2xl">
             Your report is sent in real time to the appropriate regional
             operations center. Please provide accurate details to help teams
             respond quickly and safely.
@@ -36,7 +36,7 @@ const Report = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 md:p-7 space-y-6 shadow-xl"
+          className=" bg-slate-900/80 border border-slate-800 rounded-2xl p-5 md:p-7 space-y-6 shadow-xl"
         >
           <div className="grid md:grid-cols-2 gap-5">
             <Input
@@ -71,7 +71,7 @@ const Report = () => {
               </label>
               <select
                 id="region"
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
                 <option value="" disabled selected>Select your region</option>
                 <option value="casablanca">Casablanca‑Settat</option>
@@ -97,7 +97,7 @@ const Report = () => {
               </label>
               <select
                 id="incidentType"
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
                 <option value="" disabled selected>Choose a category</option>
                 <option value="flood">Flood</option>
@@ -122,7 +122,7 @@ const Report = () => {
                 id="description"
                 rows={4}
                 placeholder="Describe the incident, number of people impacted, visible risks, etc."
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
               />
               <p className="mt-1.5 text-[11px] text-slate-400">
                 Do not include passwords or sensitive banking information.
@@ -136,7 +136,7 @@ const Report = () => {
               <input
                 id="location"
                 placeholder="Street, city, nearest landmark"
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
               <div className="text-[11px] text-slate-400 space-y-1">
                 <p>
@@ -147,7 +147,7 @@ const Report = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-3 border-t border-slate-800">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-3 border-t  border-slate-800">
             <div className="flex items-start gap-2 text-[11px] text-slate-400">
               <span className="mt-1 h-6 w-8 rounded-full border border-emerald-400 text-[12px] flex items-center justify-center text-emerald-300">
                 i

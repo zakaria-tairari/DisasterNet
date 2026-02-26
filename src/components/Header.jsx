@@ -19,16 +19,13 @@ const Header = () => {
 
 
   return (
-    <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur">
+    <header className="border-b border-slate-800 bg-slate-900/40 backdrop-blur">
       <div className="mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2">
           <div className="leading-tight">
-            <p className="font-semibold tracking-wide text-white">
+            <p className="font-semibold text-lg tracking-wide text-white">
               Disaster<span className="text-emerald-400">Net</span>
-            </p>
-            <p className="text-[11px] text-slate-400">
-              National Emergency Platform
             </p>
           </div>
         </Link>

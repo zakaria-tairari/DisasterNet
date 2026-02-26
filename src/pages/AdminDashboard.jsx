@@ -80,9 +80,9 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80">
+        <div className="overflow-hidden rounded-xl border  border-slate-800  bg-slate-900/80">
           <table className="w-full text-sm">
-            <thead className="bg-slate-900/90 text-xs uppercase tracking-[0.16em] text-slate-400">
+            <thead className=" bg-slate-900/90 text-xs uppercase tracking-[0.16em] text-slate-400">
               <tr>
                 <th className="px-4 py-3 text-left">Report ID</th>
                 <th className="px-4 py-3 text-left">Type</th>
@@ -94,12 +94,12 @@ const AdminDashboard = () => {
             </thead>
             <tbody className="divide-y divide-slate-800">
               {MOCK_REPORTS.map((report) => (
-                <tr key={report.id} className="hover:bg-slate-800/60">
+                <tr key={report.id} className="hover:bg-slate-800/60 bg-slate-800/40">
                   <td className="px-4 py-3 font-medium text-slate-100">
                     {report.id}
                   </td>
                   <td className="px-4 py-3 text-slate-200">{report.type}</td>
-                  <td className="px-4 py-3 text-slate-300">{report.region}</td>
+                  <td className="px-4 py-3  text-slate-300">{report.region}</td>
                   <td className="px-4 py-3">
                     <StatusBadge
                       variant={
@@ -126,7 +126,7 @@ const AdminDashboard = () => {
 
       {/* Account management */}
       <section className="grid md:grid-cols-[1.4fr,1fr] gap-5 pt-2">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 space-y-3">
+        <div className="rounded-xl border  border-slate-800  bg-slate-900/80 p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-100">
               Manage accounts
@@ -140,7 +140,7 @@ const AdminDashboard = () => {
             {MOCK_ACCOUNTS.map((account) => (
               <div
                 key={account.id}
-                className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2.5"
+                className="flex items-center justify-between rounded-lg border  border-slate-800  bg-slate-900 px-3 py-2.5"
               >
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium text-slate-100">

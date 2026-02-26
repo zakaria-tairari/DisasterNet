@@ -2,6 +2,7 @@ import React from "react";
 import DashboardShell from "../components/DashboardShell";
 import MetricCard from "../components/MetricCard";
 import StatusBadge from "../components/StatusBadge";
+import AltButton from "../components/AltButton";
 
 // Mock regional incident list for the operator view.
 // Later this can be a Firestore query filtered by region
@@ -79,7 +80,7 @@ const OperatorDashboard = () => {
               Incident queue – Casablanca‑Settat
             </h2>
             <div className="flex gap-2">
-              <select className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-[11px] text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <select className="rounded-lg border  border-slate-700  bg-slate-900 px-3 py-1.5 text-[11px] text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 <option>Sort by severity</option>
                 <option>Sort by time</option>
                 <option>Sort by status</option>
@@ -87,9 +88,9 @@ const OperatorDashboard = () => {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80">
+          <div className="overflow-hidden rounded-xl border  border-slate-800  bg-slate-900/80">
             <table className="w-full text-sm">
-              <thead className="bg-slate-900/90 text-xs uppercase tracking-[0.16em] text-slate-400">
+              <thead className=" bg-slate-900/90 text-xs uppercase tracking-[0.16em] text-slate-400">
                 <tr>
                   <th className="px-4 py-3 text-left">Report</th>
                   <th className="px-4 py-3 text-left">Type</th>
@@ -101,7 +102,7 @@ const OperatorDashboard = () => {
               </thead>
               <tbody className="divide-y divide-slate-800">
                 {MOCK_REGIONAL_REPORTS.map((report) => (
-                  <tr key={report.id} className="hover:bg-slate-800/60">
+                  <tr key={report.id} className="hover:bg-slate-800/60 bg-slate-800/40">
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-slate-100">
                         {report.id}
@@ -111,7 +112,7 @@ const OperatorDashboard = () => {
                       </p>
                     </td>
                     <td className="px-4 py-3 text-slate-200">{report.type}</td>
-                    <td className="px-4 py-3 text-slate-300">
+                    <td className="px-4 py-3  text-slate-300">
                       {report.location}
                     </td>
                     <td className="px-4 py-3">
@@ -122,15 +123,9 @@ const OperatorDashboard = () => {
                     <td className="px-4 py-3 text-slate-200">{report.status}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1.5">
-                        <button className="rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-2.5 py-1 text-[11px] text-emerald-200 hover:bg-emerald-500/20">
-                          Validate
-                        </button>
-                        <button className="rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-2.5 py-1 text-[11px] text-emerald-200 hover:bg-emerald-500/20">
-                          Assign team
-                        </button>
-                        <button className="rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] text-slate-200 hover:bg-slate-800">
-                          Details
-                        </button>
+                        <AltButton>Validate</AltButton>
+                        <AltButton variant="info">Assign team</AltButton>
+                        <AltButton variant="info">Details</AltButton>
                       </div>
                     </td>
                   </tr>
@@ -142,7 +137,7 @@ const OperatorDashboard = () => {
 
         {/* Team management */}
         <div className="space-y-3">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 space-y-3">
+          <div className="rounded-xl border  border-slate-800  bg-slate-900/80 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-slate-100">
                 Field teams in region
@@ -156,7 +151,7 @@ const OperatorDashboard = () => {
               {MOCK_TEAMS.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950 px-3 py-2.5"
+                  className="flex items-center justify-between rounded-lg border  border-slate-800  bg-slate-950 px-3 py-2.5"
                 >
                   <div>
                     <p className="text-sm font-medium text-slate-100">
@@ -174,7 +169,7 @@ const OperatorDashboard = () => {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 space-y-2 text-[11px] text-slate-400">
+          <div className="rounded-xl border  border-slate-800  bg-slate-900/80 p-4 space-y-2 text-[11px] text-slate-400">
             <p className="font-semibold text-slate-200">
               Workflow guidance (for your implementation)
             </p>

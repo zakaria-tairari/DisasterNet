@@ -15,7 +15,7 @@ const RoleSelector = ({ onChange, role }) => {
               className={`px-3 py-2 rounded-lg transition text-center ${
                 role === option.id
                   ? "bg-emerald-400 text-slate-900 shadow-sm"
-                  : "text-slate-300 hover:bg-slate-700/70"
+                  : "text-slate-400 hover:bg-slate-700/70"
               }`}
             >
               {option.label}

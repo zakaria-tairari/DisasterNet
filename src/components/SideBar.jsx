@@ -11,8 +11,8 @@ const SideBar = ({ items }) => {
               to={item.to}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${
                 location.pathname === item.to
-                  ? "bg-slate-800 text-emerald-300"
-                  : "text-slate-300 hover:bg-slate-800/70 hover:text-emerald-200"
+                  ? "bg-slate-800/60 text-emerald-300"
+                  : "text-slate-300 hover:bg-slate-800/40 hover:text-emerald-200"
               }`}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
