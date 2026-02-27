@@ -1,24 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { db } from "../firebase/config";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import Alert from "../components/Alert";
+import { getFirebaseErrorMessage } from "../lib/firebaseErrors";
 
-// Public incident report page used by citizens.
-// This is kept frontend-only for now, but the form
-// structure and state are ready for you to connect
-// to Firebase (Firestore + Cloud Functions).
 const Report = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const [fullName, setFullName] = useState("");
+  const [cin, setCin] = useState("");
+  const [phone, setPhone] = useState("");
+  const [region, setRegion] = useState("");
+  const [type, setType] = useState("");
+  const [description, setDescription] = useState("");
+  const [geoLocation, setGeoLocation] = useState("");
+  const [alert, setAlert] = useState({ type: "success", message: "" });
 
-    // TODO: Replace with Firestore write (addDoc)
-    // and optionally a Cloud Function to fan out
-    // notifications to the right regional operator.
-    // You can access form values via FormData or
-    // controlled inputs.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!fullName || !cin || !phone || !region || !type || !geoLocation) {
+      setAlert({ type: "error", message: "(*) fields are required" });
+      return;
+    }
+
+    try {
+      const docRef = await addDoc(collection(db, "reports"), {
+        fullName,
+        cin,
+        phone,
+        region,
+        type,
+        description,
+        geoLocation,
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+      setAlert({ type: "success", message: "Incident report submitted." });
+      console.log("Document added : ID - " + docRef.id);
+    } catch (error) {
+      const message = getFirebaseErrorMessage(message.code);
+      setAlert({ type: "error", message: message });
+    }
   };
 
   return (
     <div className=" bg-slate-950 min-h-[calc(100vh-8rem)] text-slate-50">
+      <Alert
+        type={alert.type}
+        message={alert.message}
+        onClose={() => setAlert((prev) => ({ ...prev, message: "" }))}
+      />
       <div className="max-w-4xl mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 space-y-3">
           <p className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.25em] text-emerald-400">
@@ -41,21 +72,27 @@ const Report = () => {
           <div className="grid md:grid-cols-2 gap-5">
             <Input
               id="fullName"
-              label="Full name"
+              label="Full name*"
               placeholder="e.g. Ahmed El Mansouri"
+              onChange={(e) => setFullName(e.target.value)}
+              value={fullName}
             />
             <Input
               id="cin"
-              label="CIN (National ID)"
+              label="CIN (National ID)*"
               placeholder="e.g. AA123456"
+              onChange={(e) => setCin(e.target.value)}
+              value={cin}
             />
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             <div>
               <Input
                 id="phone"
-                label="Phone number"
+                label="Phone number*"
                 placeholder="+212 6 12 34 56 78"
+                onChange={(e) => setPhone(e.target.value)}
+                value={phone}
               />
               <p className="mt-1.5 text-[11px] text-slate-400">
                 Used only for emergency follow‑up.
@@ -67,13 +104,17 @@ const Report = () => {
                 htmlFor="region"
                 className="block text-sm font-medium text-slate-100 mb-1.5"
               >
-                Region
+                Region*
               </label>
               <select
                 id="region"
                 className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                onChange={(e) => setRegion(e.target.value)}
+                value={region}
               >
-                <option value="" disabled selected>Select your region</option>
+                <option value="" disabled>
+                  Select your region
+                </option>
                 <option value="casablanca">Casablanca‑Settat</option>
                 <option value="rabat">Rabat‑Salé‑Kénitra</option>
                 <option value="marrakech">Marrakech‑Safi</option>
@@ -93,13 +134,17 @@ const Report = () => {
                 htmlFor="incidentType"
                 className="block text-sm font-medium text-slate-100 mb-1.5"
               >
-                Incident type
+                Incident type*
               </label>
               <select
                 id="incidentType"
                 className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                onChange={(e) => setType(e.target.value)}
+                value={type}
               >
-                <option value="" disabled selected>Choose a category</option>
+                <option value="" disabled>
+                  Choose a category
+                </option>
                 <option value="flood">Flood</option>
                 <option value="fire">Fire</option>
                 <option value="traffic">Traffic accident</option>
@@ -115,6 +160,8 @@ const Report = () => {
               <label
                 htmlFor="description"
                 className="block text-sm font-medium text-slate-100 mb-1.5"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
               >
                 What happened?
               </label>
@@ -131,12 +178,14 @@ const Report = () => {
 
             <div className="space-y-3">
               <label className="block text-sm font-medium text-slate-100">
-                Location details
+                Location*
               </label>
               <input
                 id="location"
                 placeholder="Street, city, nearest landmark"
                 className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                onChange={(e) => setGeoLocation(e.target.value)}
+                value={geoLocation}
               />
               <div className="text-[11px] text-slate-400 space-y-1">
                 <p>
@@ -146,7 +195,6 @@ const Report = () => {
               </div>
             </div>
           </div>
-
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-3 border-t  border-slate-800">
             <div className="flex items-start gap-2 text-[11px] text-slate-400">
               <span className="mt-1 h-6 w-8 rounded-full border border-emerald-400 text-[12px] flex items-center justify-center text-emerald-300">

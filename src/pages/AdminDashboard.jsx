@@ -1,60 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardShell from "../components/DashboardShell";
 import MetricCard from "../components/MetricCard";
 import StatusBadge from "../components/StatusBadge";
-import Button from "../components/Button";
-import Input from "../components/Input";
-import RoleSelector from "../components/RoleSelector";
 import CreateUserForm from "../components/admin/CreateUserForm";
 import AltButton from "../components/AltButton";
-
-// Mock data so the UI looks alive.
-// Replace these with Firestore collections later.
-const MOCK_REPORTS = [
-  {
-    id: "R-2026-001",
-    type: "Flood",
-    region: "Casablanca‑Settat",
-    status: "Validated",
-    createdAt: "10:32",
-    assignedTeam: "Team Atlas 03",
-  },
-  {
-    id: "R-2026-002",
-    type: "Traffic accident",
-    region: "Rabat‑Salé‑Kénitra",
-    status: "Dispatched",
-    createdAt: "10:21",
-    assignedTeam: "Highway North 02",
-  },
-  {
-    id: "R-2026-003",
-    type: "Fire",
-    region: "Marrakech‑Safi",
-    status: "Pending",
-    createdAt: "10:18",
-    assignedTeam: "-",
-  },
-];
-
-const MOCK_ACCOUNTS = [
-  { id: "A-001", name: "National Admin", role: "Admin", region: "All" },
-  { id: "O-101", name: "Casablanca ROC", role: "Operator", region: "Casablanca‑Settat" },
-  { id: "T-401", name: "Team Atlas 03", role: "Field Team", region: "Casablanca‑Settat" },
-];
-
+import { collection, onSnapshot, getDocs } from "firebase/firestore";
+import { db } from "../firebase/config";
+import { getDate } from "../lib/firebaseGetDate";
+import { Link } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const AdminDashboard = () => {
+  const [reports, setReports] = useState([]);
+  const [userAccounts, setUserAccounts] = useState([]);
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = () => {
+      onSnapshot(
+        collection(db, "reports"),
+        (snap) => {
+          setReports(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+          setPageLoading(false);
+        },
+        (error) => {
+          console.error(error);
+          setPageLoading(false);
+        },
+      );
+    };
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const snap = await getDocs(collection(db, "users"));
+        setUserAccounts(
+          snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setPageLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (pageLoading) return <Loading />;
 
   return (
-    <DashboardShell
-      title="National oversight dashboard"
-    >
+    <DashboardShell title="National oversight dashboard">
       {/* Top stats */}
       <section className="grid md:grid-cols-3 gap-4">
         <MetricCard
           title="Active incidents"
-          value="32"
+          value={
+            reports.filter((report) => report.status !== "resolved").length
+          }
           description="Across all regions in the last 24h."
         />
         <MetricCard
@@ -64,7 +70,7 @@ const AdminDashboard = () => {
         />
         <MetricCard
           title="Accounts"
-          value="84"
+          value={userAccounts.length}
           description="Admin, operator and field teams nationwide."
         />
       </section>
@@ -84,7 +90,7 @@ const AdminDashboard = () => {
           <table className="w-full text-sm">
             <thead className=" bg-slate-900/90 text-xs uppercase tracking-[0.16em] text-slate-400">
               <tr>
-                <th className="px-4 py-3 text-left">Report ID</th>
+                <th className="px-4 py-3 text-left">Reporter ID</th>
                 <th className="px-4 py-3 text-left">Type</th>
                 <th className="px-4 py-3 text-left">Region</th>
                 <th className="px-4 py-3 text-left">Status</th>
@@ -93,10 +99,13 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800">
-              {MOCK_REPORTS.map((report) => (
-                <tr key={report.id} className="hover:bg-slate-800/60 bg-slate-800/40">
+              {reports.map((report) => (
+                <tr
+                  key={report.id}
+                  className="hover:bg-slate-800/60 bg-slate-800/40"
+                >
                   <td className="px-4 py-3 font-medium text-slate-100">
-                    {report.id}
+                    {report.cin}
                   </td>
                   <td className="px-4 py-3 text-slate-200">{report.type}</td>
                   <td className="px-4 py-3  text-slate-300">{report.region}</td>
@@ -107,7 +116,9 @@ const AdminDashboard = () => {
                           ? "success"
                           : report.status === "Dispatched"
                             ? "safe"
-                            : "warning"
+                            : report.status === "pending"
+                              ? "warning"
+                              : "info"
                       }
                     >
                       {report.status}
@@ -116,7 +127,9 @@ const AdminDashboard = () => {
                   <td className="px-4 py-3 text-slate-200">
                     {report.assignedTeam}
                   </td>
-                  <td className="px-4 py-3 text-slate-400">{report.createdAt}</td>
+                  <td className="px-4 py-3 text-slate-400">
+                    {getDate(report.createdAt)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -131,32 +144,31 @@ const AdminDashboard = () => {
             <h2 className="text-sm font-semibold text-slate-100">
               Manage accounts
             </h2>
-            <button className="text-[11px] text-emerald-300 hover:text-emerald-200">
+            <Link
+              to={"/admin/users"}
+              className="text-[11px] text-emerald-300 hover:text-emerald-200"
+            >
               View all
-            </button>
+            </Link>
           </div>
 
           <div className="space-y-2">
-            {MOCK_ACCOUNTS.map((account) => (
+            {userAccounts.map((account) => (
               <div
                 key={account.id}
                 className="flex items-center justify-between rounded-lg border  border-slate-800  bg-slate-900 px-3 py-2.5"
               >
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium text-slate-100">
-                    {account.name}
+                    {account.username}
                   </p>
                   <p className="text-[11px] text-slate-400">
-                    {account.role} • {account.region}
+                    {account.role} {account.region ? "• " + account.region : ""}
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <AltButton variant="info">
-                    Edit
-                  </AltButton>
-                  <AltButton variant="danger">
-                    Delete
-                  </AltButton>
+                  <AltButton variant="info">Edit</AltButton>
+                  <AltButton variant="danger">Delete</AltButton>
                 </div>
               </div>
             ))}
@@ -169,4 +181,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-

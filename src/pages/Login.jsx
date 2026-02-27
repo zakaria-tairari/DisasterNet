@@ -2,22 +2,20 @@ import React, { useState, useEffect } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import SocialButton from "../components/SocialButton";
-import RoleSelector from "../components/RoleSelector";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import ErrorMessage from "../components/ErrorMessage";
+import Alert from "../components/Alert";
 import { getFirebaseErrorMessage } from "../lib/firebaseErrors";
 
 const Login = () => {
   const navigate = useNavigate();
   const { user, loading } = useContext(AuthContext);
-  const [role, setRole] = useState("operator");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [alert, setAlert] = useState({type: "success", message: ""});
 
   useEffect(() => {
     if (!loading && user) {
@@ -28,7 +26,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setErrorMessage("All fields are required");
+      setAlert({type: "error", message: "All fields are required"});
       return;
     }
 
@@ -37,12 +35,17 @@ const Login = () => {
     } catch (error) {
       const message = getFirebaseErrorMessage(error.code);
       console.log(error.code);
-      setErrorMessage(message);
+      setAlert({type: "error", message: message});
     }
   };
 
   return (
     <div className="min-h-[calc(100vh-8rem)]  bg-slate-950 flex items-center justify-center px-4 py-8">
+      <Alert 
+        type={alert.type}
+        message={alert.message}
+        onClose={() => setAlert(prev => ({...prev, message: ""}))}
+      />
       <div className="max-w-md w-full  bg-slate-900/70 backdrop-blur-xl border  border-slate-700/60 shadow-2xl rounded-2xl p-8 space-y-7">
         <div className="space-y-2 text-center">
           <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/80">
@@ -55,9 +58,6 @@ const Login = () => {
             Access your real-time incident coordination dashboards.
           </p>
         </div>
-
-        <RoleSelector onChange={setRole} role={role} />
-
         <form className="space-y-4" onSubmit={handleSubmit}>
           <Input
             id="email"
@@ -65,7 +65,7 @@ const Login = () => {
             type="text"
             placeholder="operator@protectioncivile.ma"
             value={email}
-            onChange={e => {setEmail(e.target.value); setErrorMessage("");}}
+            onChange={e => setEmail(e.target.value)}
           />
           <Input
             id="password"
@@ -73,7 +73,7 @@ const Login = () => {
             type="password"
             placeholder="Enter your password"
             value={password}
-            onChange={e => {setPassword(e.target.value); setErrorMessage("")}}
+            onChange={e => setPassword(e.target.value)}
           />
 
           <div className="flex items-center justify-between text-xs">
@@ -85,7 +85,6 @@ const Login = () => {
               Remember this device
             </label>
           </div>
-          <ErrorMessage message={errorMessage} />
 
           <Button type="submit">Sign In to Dashboard</Button>
         </form>

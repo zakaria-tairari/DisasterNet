@@ -37,7 +37,7 @@ const Header = () => {
             to="/login"
             className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 transition cursor-pointer"
            >
-            Login
+            Operations Login
           </Link>
           :
           <button onClick={logout}

@@ -11,6 +11,7 @@ import GuestMiddleware from "./middlewares/GuestMiddleware";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import Loading from "./components/Loading";
+import ManageUsers from "./pages/ManageUsers";
 
 function App() {
   const { loading } = useContext(AuthContext);
@@ -28,18 +29,19 @@ function App() {
           </Route>
 
           {/* Admin routes */}
-          <Route element={<AuthMiddleware role="admin" />}>
-            <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AuthMiddleware role="admin" />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<ManageUsers />} />
           </Route>
 
           {/* Operator routes */}
-          <Route element={<AuthMiddleware role="operator" />}>
-            <Route path="/operator" element={<OperatorDashboard />} />
+          <Route path="/operator" element={<AuthMiddleware role="operator" />}>
+            <Route index element={<OperatorDashboard />} />
           </Route>
 
           {/* Team routes */}
-          <Route element={<AuthMiddleware role="team" />}>
-            <Route path="/team" element={<TeamDashboard />} />
+          <Route path="team" element={<AuthMiddleware role="team" />}>
+            <Route index element={<TeamDashboard />} />
           </Route>
             
           <Route path="*" element={<Navigate to="/" replace />} />
