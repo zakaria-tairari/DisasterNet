@@ -3,16 +3,66 @@ import RoleSelector from "../RoleSelector";
 import Input from "../Input";
 import Button from "../Button";
 import { useState } from "react";
+import Alert from "../Alert";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "../../firebase/config";
+import { getFirebaseErrorMessage } from "../../lib/firebaseErrors";
 
 const CreateUserForm = () => {
+  const [role, setRole] = useState("operator");
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [alert, setAlert] = useState({ type: "success", message: "" });
+  const [region, setRegion] = useState("");
 
-    const [role, setrole] = useState("operator");
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [region, setRegion] = useState("");
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+
+    if (!displayName || !email || !password || !confirmPassword || !role) {
+      setAlert({ type: "error", message: "Missing fields." });
+      return;
+    }
+
+    if (role !== "admin" && !region) {
+      setAlert({ type: "error", message: "Region is required." });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setAlert({ type: "error", message: "Failed password confirmation." });
+      return;
+    }
+
+    const createUser = httpsCallable(functions, "createUser");
+    try {
+      await createUser({
+        displayName,
+        email,
+        password,
+        role,
+        region,
+      });
+      setAlert({ type: "success", message: "User created successfuly." });
+      setDisplayName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setRegion("");
+    } catch (error) {
+      setAlert({ type: "error", message: getFirebaseErrorMessage(error.code) });
+      console.log(error.code);
+    }
+  };
 
   return (
     <div className="rounded-xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-3">
+      <Alert
+        type={alert.type}
+        message={alert.message}
+        onClose={(prev) => ({ ...prev, message: "" })}
+      />
       <h2 className="text-sm font-semibold text-slate-100">
         Create new account
       </h2>
@@ -20,19 +70,41 @@ const CreateUserForm = () => {
         In your Firebase implementation, this form should create a user in Auth
         and store role / region in Firestore or custom claims.
       </p>
-      <form className="space-y-3">
-        <RoleSelector onChange={setrole} role={role} />
-        <Input placeholder="Username" onChange={e => setUsername(e.target.value)} value={username} />
-        <Input placeholder="Email" onChange={e => setEmail(e.target.value)} value={email} />
-        <select 
-        value={region}
-        onChange={e => setRegion(e.target.value)}
-        disabled={role === "admin"}
-        className={`w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 
-        ${role === "admin" ? "text-slate-700" : "text-slate-50"}`
-        }>
+      <form className="space-y-3" onSubmit={handleCreateUser}>
+        <RoleSelector onChange={setRole} role={role} />
+        <Input
+          placeholder="Username"
+          onChange={(e) => setDisplayName(e.target.value)}
+          value={displayName}
+        />
+        <Input
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        />
+        <Input
+          placeholder="Password"
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+        />
+        <Input
+          placeholder="Confirm password"
+          type="password"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={confirmPassword}
+        />
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          disabled={role === "admin"}
+          className={`w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 
+        ${role === "admin" ? "text-slate-700" : "text-slate-50"}`}
+        >
           <option value="">
-            {role === "admin" ? "Region not required for admin" : "Select region"}
+            {role === "admin"
+              ? "Region not required for admin"
+              : "Select region"}
           </option>
           <option value="casablanca">Casablanca‑Settat</option>
           <option value="rabat">Rabat‑Salé‑Kénitra</option>

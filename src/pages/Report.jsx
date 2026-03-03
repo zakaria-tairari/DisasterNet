@@ -38,8 +38,7 @@ const Report = () => {
       setAlert({ type: "success", message: "Incident report submitted." });
       console.log("Document added : ID - " + docRef.id);
     } catch (error) {
-      const message = getFirebaseErrorMessage(message.code);
-      setAlert({ type: "error", message: message });
+      setAlert({ type: "error", message: getFirebaseErrorMessage(message.code) });
     }
   };
 

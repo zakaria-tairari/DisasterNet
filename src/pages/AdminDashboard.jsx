@@ -160,7 +160,7 @@ const AdminDashboard = () => {
               >
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium text-slate-100">
-                    {account.username}
+                    {account.displayName}
                   </p>
                   <p className="text-[11px] text-slate-400">
                     {account.role} {account.region ? "• " + account.region : ""}

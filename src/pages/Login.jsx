@@ -33,9 +33,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      const message = getFirebaseErrorMessage(error.code);
-      console.log(error.code);
-      setAlert({type: "error", message: message});
+      setAlert({type: "error", message: getFirebaseErrorMessage(error.code)});
     }
   };
 

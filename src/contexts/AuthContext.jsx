@@ -20,12 +20,15 @@ export const AuthProvider = ({ children }) => {
       try {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
+        const tokenResult = await user.getIdTokenResult();
 
         const userData = docSnap.exists() ? docSnap.data() : {};
 
         setUser({
+          displayName: user.displayName,
           uid: user.uid,
           email: user.email,
+          role: tokenResult.claims.role || null,
           ...userData,
         });
       } catch (error) {

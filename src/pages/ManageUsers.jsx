@@ -5,6 +5,7 @@ import AltButton from '../components/AltButton';
 import { db } from "../firebase/config";
 import { collection, getDocs } from 'firebase/firestore';
 import Loading from '../components/Loading';
+import PopupButton from '../components/PopupButton';
 
 const ManageUsers = () => {
     const [userAccounts, setUserAccounts] = useState([]);
@@ -50,7 +51,7 @@ const ManageUsers = () => {
               >
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium text-slate-100">
-                    {account.username}
+                    {account.displayName}
                   </p>
                   <p className="text-[11px] text-slate-400">
                     {account.role} {account.region ? "• " + account.region : ""}
@@ -64,7 +65,9 @@ const ManageUsers = () => {
             ))}
           </div>
         </div>
-        <CreateUserForm />
+        <PopupButton buttonText="+ Add user">
+          <CreateUserForm />
+        </PopupButton>
       </section>
     </DashboardShell>
   )

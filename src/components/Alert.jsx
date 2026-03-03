@@ -50,7 +50,7 @@ const STYLES = {
   },
 };
 
-const Alert = ({ type = "info", message, duration = 4000, onClose }) => {
+const Alert = ({ type = "info", message, duration = 3000, onClose }) => {
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(100);
 
@@ -127,7 +127,7 @@ const Alert = ({ type = "info", message, duration = 4000, onClose }) => {
           <span className={`mt-0.5 ${s.icon}`}>{ICONS[type]}</span>
 
           {/* Message */}
-          <p className={`flex-1 ${s.icon} leading-snug`}>
+          <p className={`flex-1 ${s.icon} text-sm leading-snug`}>
             {message}
           </p>
 
