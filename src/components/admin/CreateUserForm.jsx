@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import RoleSelector from "../RoleSelector";
 import Input from "../Input";
 import Button from "../Button";
@@ -7,15 +7,16 @@ import Alert from "../Alert";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "../../firebase/config";
 import { getFirebaseErrorMessage } from "../../lib/firebaseErrors";
+import { AlertContext } from "../../contexts/AlertContext";
 
-const CreateUserForm = () => {
+const CreateUserForm = ({ refresh }) => {
   const [role, setRole] = useState("operator");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [alert, setAlert] = useState({ type: "success", message: "" });
   const [region, setRegion] = useState("");
+  const { setAlert } = useContext(AlertContext);
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
@@ -45,6 +46,7 @@ const CreateUserForm = () => {
         region,
       });
       setAlert({ type: "success", message: "User created successfuly." });
+      refresh();
       setDisplayName("");
       setEmail("");
       setPassword("");
@@ -57,19 +59,10 @@ const CreateUserForm = () => {
   };
 
   return (
-    <div className="rounded-xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-3">
-      <Alert
-        type={alert.type}
-        message={alert.message}
-        onClose={(prev) => ({ ...prev, message: "" })}
-      />
+    <>
       <h2 className="text-sm font-semibold text-slate-100">
         Create new account
       </h2>
-      <p className="text-[11px] text-slate-400">
-        In your Firebase implementation, this form should create a user in Auth
-        and store role / region in Firestore or custom claims.
-      </p>
       <form className="space-y-3" onSubmit={handleCreateUser}>
         <RoleSelector onChange={setRole} role={role} />
         <Input
@@ -120,7 +113,7 @@ const CreateUserForm = () => {
         </select>
         <Button type="submit">Create Account</Button>
       </form>
-    </div>
+    </>
   );
 };
 

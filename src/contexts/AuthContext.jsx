@@ -20,9 +20,9 @@ export const AuthProvider = ({ children }) => {
       try {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
-        const tokenResult = await user.getIdTokenResult();
-
         const userData = docSnap.exists() ? docSnap.data() : {};
+        
+        const tokenResult = await user.getIdTokenResult();
 
         setUser({
           displayName: user.displayName,

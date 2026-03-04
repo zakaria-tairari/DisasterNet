@@ -9,6 +9,7 @@ import { db } from "../firebase/config";
 import { getDate } from "../lib/firebaseGetDate";
 import { Link } from "react-router-dom";
 import Loading from "../components/Loading";
+import UsersTable from "../components/admin/UsersTable";
 
 const AdminDashboard = () => {
   const [reports, setReports] = useState([]);
@@ -33,20 +34,20 @@ const AdminDashboard = () => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const snap = await getDocs(collection(db, "users"));
-        setUserAccounts(
-          snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
-        );
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setPageLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const snap = await getDocs(collection(db, "users"));
+      setUserAccounts(
+        snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPageLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -139,42 +140,10 @@ const AdminDashboard = () => {
 
       {/* Account management */}
       <section className="grid md:grid-cols-[1.4fr,1fr] gap-5 pt-2">
-        <div className="rounded-xl border  border-slate-800  bg-slate-900/80 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-100">
-              Manage accounts
-            </h2>
-            <Link
-              to={"/admin/users"}
-              className="text-[11px] text-emerald-300 hover:text-emerald-200"
-            >
-              View all
-            </Link>
-          </div>
-
-          <div className="space-y-2">
-            {userAccounts.map((account) => (
-              <div
-                key={account.id}
-                className="flex items-center justify-between rounded-lg border  border-slate-800  bg-slate-900 px-3 py-2.5"
-              >
-                <div className="space-y-0.5">
-                  <p className="text-sm font-medium text-slate-100">
-                    {account.displayName}
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    {account.role} {account.region ? "• " + account.region : ""}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <AltButton variant="info">Edit</AltButton>
-                  <AltButton variant="danger">Delete</AltButton>
-                </div>
-              </div>
-            ))}
-          </div>
+        <UsersTable users={userAccounts} refresh={fetchData} link="View all" />
+        <div className="rounded-xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-3">
+        <CreateUserForm refresh={fetchData} />
         </div>
-        <CreateUserForm />
       </section>
     </DashboardShell>
   );

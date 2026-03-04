@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 const ICONS = {
   success: (
@@ -94,7 +95,7 @@ const Alert = ({ type = "info", message, duration = 3000, onClose }) => {
 
   const s = STYLES[type] || STYLES.success;
 
-  return (
+  return createPortal(
     <div
       className={`
         fixed top-5 left-1/2 z-9999
@@ -143,7 +144,7 @@ const Alert = ({ type = "info", message, duration = 3000, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>, document.body
   );
 };
 

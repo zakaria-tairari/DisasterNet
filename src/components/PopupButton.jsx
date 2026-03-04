@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function PopupButton({ buttonText, children }) {
+export default function PopupButton({ buttonText, children, style = "cursor-pointer w-fit inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 transition" }) {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef();
 
@@ -23,7 +23,7 @@ export default function PopupButton({ buttonText, children }) {
     <div className="flex items-center justify-end">
       {/* Trigger Button */}
       <button
-        className="cursor-pointer w-fit inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950 transition"
+        className={`${style}`}
         onClick={openPopup}
       >
         {buttonText}
@@ -38,7 +38,7 @@ export default function PopupButton({ buttonText, children }) {
         {/* Modal Content */}
         <div
           ref={modalRef}
-          className={`rounded-lg p-10 relative shadow-lg max-w-2xl w-full transform transition-all duration-300 ${
+          className={`rounded-xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-3 relative shadow-lg max-w-2xl w-full transform transition-all duration-300 ${
             isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
@@ -48,7 +48,7 @@ export default function PopupButton({ buttonText, children }) {
             aria-label="Dismiss"
             onClick={closePopup}
           >
-            <svg className="w-7 h-7" viewBox="0 0 20 20" fill="currentColor">
+            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
               <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
             </svg>
           </button>

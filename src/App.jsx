@@ -12,15 +12,24 @@ import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import Loading from "./components/Loading";
 import ManageUsers from "./pages/ManageUsers";
+import { AlertContext } from "./contexts/AlertContext";
+import Alert from "./components/Alert";
 
 function App() {
   const { loading } = useContext(AuthContext);
+  const { alert } = useContext(AlertContext);
+
   if (loading) return <Loading />
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950">
       <Header />
       <main className="flex-1">
+        <Alert 
+          type={alert.type}
+          message={alert.message}
+          onClose={prev => ({...prev, message: ""})}
+        />
         <Routes>
           {/* Guest routes */}
           <Route element={<GuestMiddleware />}>
