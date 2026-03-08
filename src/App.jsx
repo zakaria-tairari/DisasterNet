@@ -3,15 +3,34 @@ import Report from "./pages/Report";
 import Login from "./pages/Login";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import AdminDashboard from "./pages/AdminDashboard";
-import OperatorDashboard from "./pages/OperatorDashboard";
-import TeamDashboard from "./pages/TeamDashboard";
+
+// Layouts
+import AdminLayout from "./components/layouts/AdminLayout";
+import OperatorLayout from "./components/layouts/OperatorLayout";
+import TeamLayout from "./components/layouts/TeamLayout";
+
+// Admin Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ManageUsers from "./pages/admin/ManageUsers";
+import AdminReports from "./pages/admin/AdminReports";
+import AdminTeams from "./pages/admin/AdminTeams";
+
+// Operator Pages
+import OperatorDashboard from "./pages/operator/OperatorDashboard";
+import ReportQueue from "./pages/operator/ReportQueue";
+import RegionTeams from "./pages/operator/RegionTeams";
+import RegionMap from "./pages/operator/RegionMap";
+
+// Team Pages
+import TeamDashboard from "./pages/team/TeamDashboard";
+import MissionHistory from "./pages/team/MissionHistory";
+import TeamProfile from "./pages/team/TeamProfile";
+
 import AuthMiddleware from "./middlewares/AuthMiddleware";
 import GuestMiddleware from "./middlewares/GuestMiddleware";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import Loading from "./components/Loading";
-import ManageUsers from "./pages/ManageUsers";
 import { AlertContext } from "./contexts/AlertContext";
 import Alert from "./components/Alert";
 
@@ -22,7 +41,7 @@ function App() {
   if (loading) return <Loading />
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950">
+    <div className="min-h-screen flex flex-col transition-colors duration-300">
       <Header />
       <main className="flex-1">
         <Alert 
@@ -39,18 +58,31 @@ function App() {
 
           {/* Admin routes */}
           <Route path="/admin" element={<AuthMiddleware role="admin" />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="users" element={<ManageUsers />} />
+            <Route element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="reports" element={<AdminReports />} />
+              <Route path="teams" element={<AdminTeams />} />
+              <Route path="users" element={<ManageUsers />} />
+            </Route>
           </Route>
 
           {/* Operator routes */}
           <Route path="/operator" element={<AuthMiddleware role="operator" />}>
-            <Route index element={<OperatorDashboard />} />
+            <Route element={<OperatorLayout />}>
+              <Route index element={<OperatorDashboard />} />
+              <Route path="queue" element={<ReportQueue />} />
+              <Route path="teams" element={<RegionTeams />} />
+              <Route path="map" element={<RegionMap />} />
+            </Route>
           </Route>
 
           {/* Team routes */}
-          <Route path="team" element={<AuthMiddleware role="team" />}>
-            <Route index element={<TeamDashboard />} />
+          <Route path="/team" element={<AuthMiddleware role="team" />}>
+            <Route element={<TeamLayout />}>
+              <Route index element={<TeamDashboard />} />
+              <Route path="history" element={<MissionHistory />} />
+              <Route path="profile" element={<TeamProfile />} />
+            </Route>
           </Route>
             
           <Route path="*" element={<Navigate to="/" replace />} />

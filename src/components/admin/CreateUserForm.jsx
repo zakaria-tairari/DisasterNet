@@ -60,10 +60,10 @@ const CreateUserForm = ({ refresh }) => {
 
   return (
     <>
-      <h2 className="text-sm font-semibold text-slate-100">
+      <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4 transition-colors">
         Create new account
       </h2>
-      <form className="space-y-3" onSubmit={handleCreateUser}>
+      <form className="space-y-4" onSubmit={handleCreateUser}>
         <RoleSelector onChange={setRole} role={role} />
         <Input
           placeholder="Username"
@@ -91,8 +91,8 @@ const CreateUserForm = ({ refresh }) => {
           value={region}
           onChange={(e) => setRegion(e.target.value)}
           disabled={role === "admin"}
-          className={`w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 
-        ${role === "admin" ? "text-slate-700" : "text-slate-50"}`}
+          className={`w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm
+        ${role === "admin" ? "text-slate-400 dark:text-slate-600" : "text-slate-900 dark:text-slate-50"}`}
         >
           <option value="">
             {role === "admin"

@@ -15,6 +15,43 @@ const Report = () => {
   const [description, setDescription] = useState("");
   const [geoLocation, setGeoLocation] = useState("");
   const [alert, setAlert] = useState({ type: "success", message: "" });
+  const [locating, setLocating] = useState(false);
+  const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setAlert({
+        type: "error",
+        message: "Geolocation is not supported by your browser.",
+      });
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setCoordinates({ lat: latitude, lng: longitude });
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+          );
+          const data = await res.json();
+          setGeoLocation(data.display_name ?? `${latitude}, ${longitude}`);
+        } catch {
+          setGeoLocation(`${latitude}, ${longitude}`);
+        } finally {
+          setLocating(false);
+        }
+      },
+      () => {
+        setAlert({
+          type: "error",
+          message: "Unable to retrieve your location.",
+        });
+        setLocating(false);
+      },
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,19 +68,26 @@ const Report = () => {
         region,
         type,
         description,
-        geoLocation,
+        location: {
+          address: geoLocation,
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+        },
         status: "pending",
         createdAt: serverTimestamp(),
       });
-      setAlert({ type: "success", message: "Incident report submitted." });
+      setAlert({ type: "success", message: "Report report submitted." });
       console.log("Document added : ID - " + docRef.id);
     } catch (error) {
-      setAlert({ type: "error", message: getFirebaseErrorMessage(message.code) });
+      setAlert({
+        type: "error",
+        message: getFirebaseErrorMessage(message.code),
+      });
     }
   };
 
   return (
-    <div className=" bg-slate-950 min-h-[calc(100vh-8rem)] text-slate-50">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-[calc(100vh-8rem)] text-slate-800 dark:text-slate-50 transition-colors duration-300">
       <Alert
         type={alert.type}
         message={alert.message}
@@ -52,12 +96,12 @@ const Report = () => {
       <div className="max-w-4xl mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 space-y-3">
           <p className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.25em] text-emerald-400">
-            Citizen Incident Report
+            Citizen Report Report
           </p>
-          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 transition-colors">
             Report an emergency
           </h1>
-          <p className="text-sm md:text-base  text-slate-300 max-w-2xl">
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 max-w-2xl transition-colors">
             Your report is sent in real time to the appropriate regional
             operations center. Please provide accurate details to help teams
             respond quickly and safely.
@@ -66,7 +110,7 @@ const Report = () => {
 
         <form
           onSubmit={handleSubmit}
-          className=" bg-slate-900/80 border border-slate-800 rounded-2xl p-5 md:p-7 space-y-6 shadow-xl"
+          className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 md:p-7 space-y-6 shadow-xl dark:shadow-none transition-colors duration-300"
         >
           <div className="grid md:grid-cols-2 gap-5">
             <Input
@@ -101,13 +145,13 @@ const Report = () => {
             <div>
               <label
                 htmlFor="region"
-                className="block text-sm font-medium text-slate-100 mb-1.5"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-100 mb-1.5 transition-colors"
               >
                 Region*
               </label>
               <select
                 id="region"
-                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors shadow-sm"
                 onChange={(e) => setRegion(e.target.value)}
                 value={region}
               >
@@ -130,14 +174,14 @@ const Report = () => {
 
             <div>
               <label
-                htmlFor="incidentType"
-                className="block text-sm font-medium text-slate-100 mb-1.5"
+                htmlFor="reportType"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-100 mb-1.5 transition-colors"
               >
-                Incident type*
+                Report type*
               </label>
               <select
-                id="incidentType"
-                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                id="reportType"
+                className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors shadow-sm"
                 onChange={(e) => setType(e.target.value)}
                 value={type}
               >
@@ -158,7 +202,7 @@ const Report = () => {
             <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-slate-100 mb-1.5"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-100 mb-1.5 transition-colors"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
               >
@@ -167,8 +211,8 @@ const Report = () => {
               <textarea
                 id="description"
                 rows={4}
-                placeholder="Describe the incident, number of people impacted, visible risks, etc."
-                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+                placeholder="Describe the report, number of people impacted, visible risks, etc."
+                className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none transition-colors shadow-sm"
               />
               <p className="mt-1.5 text-[11px] text-slate-400">
                 Do not include passwords or sensitive banking information.
@@ -176,26 +220,70 @@ const Report = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-slate-100">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-100 transition-colors">
                 Location*
               </label>
               <input
                 id="location"
                 placeholder="Street, city, nearest landmark"
-                className="w-full px-4 py-2.5 rounded-lg  bg-slate-950 border  border-slate-700 text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors shadow-sm"
                 onChange={(e) => setGeoLocation(e.target.value)}
                 value={geoLocation}
               />
-              <div className="text-[11px] text-slate-400 space-y-1">
-                <p>
-                  In a real deployment, this section can include a map picker
-                  using GPS coordinates or Google Maps / OpenStreetMap.
-                </p>
-              </div>
+              <button
+                type="button"
+                onClick={handleGetLocation}
+                disabled={locating}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-emerald-500 text-emerald-400 text-sm font-medium hover:bg-emerald-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {locating ? (
+                  <>
+                    <svg
+                      className="animate-spin h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      />
+                    </svg>
+                    Locating…
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M12 2v3m0 14v3M2 12h3m14 0h3" />
+                      <path d="M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                    Use my location
+                  </>
+                )}
+              </button>
+              <p className="text-[11px] text-slate-400">
+                Click to auto-fill your GPS position, or type it manually.
+              </p>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-3 border-t  border-slate-800">
-            <div className="flex items-start gap-2 text-[11px] text-slate-400">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-3 border-t border-slate-200 dark:border-slate-800 transition-colors">
+            <div className="flex items-start gap-2 text-[11px] text-slate-500 dark:text-slate-400">
               <span className="mt-1 h-6 w-8 rounded-full border border-emerald-400 text-[12px] flex items-center justify-center text-emerald-300">
                 i
               </span>
@@ -206,7 +294,7 @@ const Report = () => {
               </p>
             </div>
             <div className="w-full md:w-auto md:min-w-55">
-              <Button type="submit">Submit incident report</Button>
+              <Button type="submit">Submit report report</Button>
             </div>
           </div>
         </form>

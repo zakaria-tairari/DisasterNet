@@ -26,28 +26,28 @@ const ICONS = {
 
 const STYLES = {
   success: {
-    bar: "bg-emerald-500",
-    icon: "text-emerald-500",
-    border: "border-emerald-500/60",
-    bg: "bg-emerald-500/10",
+    bar: "bg-emerald-600 dark:bg-emerald-500",
+    icon: "text-emerald-600 dark:text-emerald-500",
+    border: "border-emerald-200 dark:border-emerald-500/60",
+    bg: "bg-emerald-50 dark:bg-emerald-500/10",
   },
   error: {
-    bar: "bg-rose-500",
-    icon: "text-rose-500",
-    border: "border-rose-500/60",
-    bg: "bg-rose-500/10",
+    bar: "bg-rose-600 dark:bg-rose-500",
+    icon: "text-rose-600 dark:text-rose-500",
+    border: "border-rose-200 dark:border-rose-500/60",
+    bg: "bg-rose-50 dark:bg-rose-500/10",
   },
   warning: {
-    bar: "bg-yellow-500",
-    icon: "text-yellow-500",
-    border: "border-yellow-500/60",
-    bg: "bg-yellow-500/10",
+    bar: "bg-yellow-600 dark:bg-yellow-500",
+    icon: "text-yellow-600 dark:text-yellow-500",
+    border: "border-yellow-200 dark:border-yellow-500/60",
+    bg: "bg-yellow-50 dark:bg-yellow-500/10",
   },
   info: {
-    bar: "bg-blue-500",
-    icon: "text-blue-500",
-    border: "border-blue-500/60",
-    bg: "bg-blue-500/10",
+    bar: "bg-blue-600 dark:bg-blue-500",
+    icon: "text-blue-600 dark:text-blue-500",
+    border: "border-blue-200 dark:border-blue-500/60",
+    bg: "bg-blue-50 dark:bg-blue-500/10",
   },
 };
 

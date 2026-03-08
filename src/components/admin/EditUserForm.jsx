@@ -41,25 +41,26 @@ const EditUserForm = ({ user, refresh }) => {
 
   return (
     <>
-      <h2 className="text-sm font-semibold text-slate-100">
+      <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4 transition-colors">
         Edit account
       </h2>
-      <form className="space-y-3" onSubmit={handleEditUser}>
+      <form className="space-y-4" onSubmit={handleEditUser}>
         <Input
-          placeholder="Username"
           onChange={(e) => setDisplayName(e.target.value)}
           value={displayName}
+          label="Username"
         />
         <Input
-          placeholder="Email"
+          label="Email"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
         />
         {user.role !== "admin" && (
+          <label> Region
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className={`w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 `}
+            className={`w-full px-4 py-2.5 rounded-lg mb-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm`}
           >
             <option value="">Select region</option>
             <option value="casablanca">Casablanca‑Settat</option>
@@ -74,6 +75,7 @@ const EditUserForm = ({ user, refresh }) => {
             <option value="laayoune">Laâyoune‑Sakia El Hamra</option>
             <option value="dakhla">Dakhla‑Oued Ed Dahab</option>
           </select>
+          </label>
         )}
 
         <Button type="submit">Submit changes</Button>

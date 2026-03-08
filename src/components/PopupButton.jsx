@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function PopupButton({ buttonText, children, style = "cursor-pointer w-fit inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 transition" }) {
+export default function PopupButton({ buttonText, children, style = "cursor-pointer w-fit inline-flex items-center justify-center text-sm rounded-full bg-emerald-500 px-4 py-2 font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 transition" }) {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef();
 
@@ -38,7 +38,7 @@ export default function PopupButton({ buttonText, children, style = "cursor-poin
         {/* Modal Content */}
         <div
           ref={modalRef}
-          className={`rounded-xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-3 relative shadow-lg max-w-2xl w-full transform transition-all duration-300 ${
+          className={`rounded-xl border min-w-3xl border-emerald-500/30 dark:border-emerald-500/40 bg-white dark:bg-slate-900/80 p-5 space-y-3 shadow-sm dark:shadow-none transition-colors ${
             isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >

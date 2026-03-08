@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "disasternet-f2a43"
-  }
+    "default": "disasternet-f2a43",
+    "staging": "disasternet-f2a43"
+  },
+  "targets": {},
+  "etags": {}
 }
