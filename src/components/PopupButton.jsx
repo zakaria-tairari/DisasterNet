@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function PopupButton({ buttonText, children, style = "cursor-pointer w-fit inline-flex items-center justify-center text-sm rounded-full bg-emerald-500 px-4 py-2 font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 transition" }) {
+export default function PopupButton({ buttonText, children, style = "cursor-pointer w-fit inline-flex items-center justify-center text-sm rounded-full bg-emerald-500 px-4 py-2 font-semibold text-white dark:text-slate-950 shadow-sm hover:bg-emerald-400 transition" }) {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef();
 
@@ -31,14 +31,14 @@ export default function PopupButton({ buttonText, children, style = "cursor-poin
 
       {/* Popup Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 flex justify-center items-center z-50 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/20 flex justify-center items-center z-100 transition-opacity duration-300 ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
         {/* Modal Content */}
         <div
           ref={modalRef}
-          className={`rounded-xl border min-w-3xl border-emerald-500/30 dark:border-emerald-500/40 bg-white dark:bg-slate-900/80 p-5 space-y-3 shadow-sm dark:shadow-none transition-colors ${
+          className={`rounded-xl border min-w-3xl border-emerald-500/30 dark:border-emerald-500/40 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-lg transition-colors ${
             isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
@@ -48,7 +48,7 @@ export default function PopupButton({ buttonText, children, style = "cursor-poin
             aria-label="Dismiss"
             onClick={closePopup}
           >
-            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <svg className="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
               <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
             </svg>
           </button>

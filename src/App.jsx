@@ -1,8 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Report from "./pages/Report";
 import Login from "./pages/Login";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 
 // Layouts
 import AdminLayout from "./components/layouts/AdminLayout";
@@ -33,6 +31,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import Loading from "./components/Loading";
 import { AlertContext } from "./contexts/AlertContext";
 import Alert from "./components/Alert";
+import AdminMap from "./pages/admin/AdminMap";
 
 function App() {
   const { loading } = useContext(AuthContext);
@@ -42,7 +41,6 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300">
-      <Header />
       <main className="flex-1">
         <Alert 
           type={alert.type}
@@ -61,7 +59,7 @@ function App() {
             <Route element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="reports" element={<AdminReports />} />
-              <Route path="teams" element={<AdminTeams />} />
+              <Route path="map" element={<AdminMap />} />
               <Route path="users" element={<ManageUsers />} />
             </Route>
           </Route>
@@ -88,7 +86,6 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <Footer />
     </div>
   );
 }

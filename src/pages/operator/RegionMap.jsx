@@ -26,7 +26,7 @@ const RegionMap = () => {
       (snap) => {
         const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         // Only map active reports
-        setReports(data.filter(i => i.status !== "Resolved" && i.position));
+        setReports(data.filter(i => i.status !== "resolved" && i.position));
         setLoading(false);
       },
       (error) => {

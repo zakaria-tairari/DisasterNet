@@ -33,7 +33,6 @@ const Header = () => {
 
         {/* Auth entry point */}
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           {!user ?
            <Link
             to="/login"

@@ -9,6 +9,7 @@ import { signOut } from "firebase/auth";
 import { AlertContext } from "../../contexts/AlertContext";
 import PopupButton from "../PopupButton";
 import EditUserForm from "./EditUserForm";
+import Button from "../Button";
 
 const UsersTable = ({ users, link, refresh }) => {
   const { setAlert } = useContext(AlertContext);
@@ -71,13 +72,27 @@ const UsersTable = ({ users, link, refresh }) => {
                   refresh={refresh}
                 />
               </PopupButton>
-              <AltButton
-                variant="danger"
-                value={account.id}
-                onClick={handleDeleteUser}
+              
+              <PopupButton
+                buttonText="Delete"
+                style="text-[11px] px-2 py-1 rounded-lg cursor-pointer text-red-600 dark:text-red-300 border border-red-200 dark:border-red-500/40 hover:bg-red-50 dark:hover:bg-red-600/10 transition-colors duration-200"
               >
-                Delete
-              </AltButton>
+                <h2 className="text-center text-lg font-bold text-slate-900 dark:text-white mb-5">Are you sure you want to delete user : {account.displayName}</h2>
+                <div>
+                      <span className="text-sm text-slate-600 dark:text-slate-400 block mb-2">
+                        <strong className="text-slate-900 dark:text-white mb-1">Username : </strong> {account.displayName}
+                      </span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400 block mb-2">
+                        <strong className="text-slate-900 dark:text-white mb-1">Email : </strong> {account.email}
+                      </span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400 block mb-2">
+                        <strong className="text-slate-900 dark:text-white mb-1">Role : </strong> {account.role}
+                      </span>
+                    </div>
+                <div className="flex items-center justify-center">
+                  <button className="text-sm px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-500/40 hover:bg-red-50 dark:hover:bg-red-600/10" value={account.id} onClick={handleDeleteUser}>Delete user</button>
+                </div>
+              </PopupButton>
             </div>
           </div>
         ))}
