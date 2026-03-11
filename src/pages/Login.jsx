@@ -46,7 +46,7 @@ const Login = () => {
         <div className="max-w-md w-full bg-white dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200 dark:border-slate-700/60 shadow-2xl dark:shadow-none rounded-2xl p-8 space-y-7 transition-colors duration-300">
           <div className="space-y-2 text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400/80">
-              Disasternet • Morocco
+              Emergencynet • Morocco
             </p>
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
               Secure Operations Login

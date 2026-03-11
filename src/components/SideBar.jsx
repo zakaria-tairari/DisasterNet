@@ -19,7 +19,7 @@ const SideBar = ({ items, collapsed }) => {
         <Link to="/" className="flex items-center gap-2">
           <div className="leading-tight">
             <p className="font-semibold tracking-wide text-slate-800 dark:text-white transition-colors duration-300">
-              {collapsed ? "D" : "Disaster"}
+              {collapsed ? "E" : "Emergency"}
               <span className="text-emerald-500 dark:text-emerald-400">Net</span>
             </p>
           </div>

@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm">
         <div className="leading-tight">
             <p className="font-semibold text-lg tracking-wide text-slate-800 dark:text-white transition-colors duration-300">
-              Disaster<span className="text-emerald-500 dark:text-emerald-400">Net</span>
+              Emergency<span className="text-emerald-500 dark:text-emerald-400">Net</span>
             </p>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               National Emergency Platform
@@ -27,7 +27,7 @@ const Footer = () => {
         </div>
 
         <div className="text-[12px] text-slate-400 dark:text-slate-500">
-          © {new Date().getFullYear()} Disasternet. All rights reserved.
+          © {new Date().getFullYear()} Emergencynet. All rights reserved.
         </div>
       </div>
     </footer>

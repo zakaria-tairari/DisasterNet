@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
-import DashboardShell from "../../components/DashboardShell";
 import MetricCard from "../../components/MetricCard";
-import StatusBadge from "../../components/StatusBadge";
-import CreateUserForm from "../../components/admin/CreateUserForm";
-import AltButton from "../../components/AltButton";
-import { collection, onSnapshot, getDocs } from "firebase/firestore";
+import { collection, onSnapshot, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../../firebase/config";
-import { getDate } from "../../lib/firebaseGetDate";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
-import UsersTable from "../../components/admin/UsersTable";
 import {
   AreaChart,
   Area,
@@ -32,8 +26,9 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const unsubscribe = () => {
+      const q = query(collection(db, "reports"), orderBy("createdAt", "desc"));
       onSnapshot(
-        collection(db, "reports"),
+        q,
         (snap) => {
           setReports(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
           setPageLoading(false);

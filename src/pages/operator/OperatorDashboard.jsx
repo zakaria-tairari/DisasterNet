@@ -131,7 +131,7 @@ const OperatorDashboard = () => {
         <MetricCard
           title="Total local teams"
           value={teams.length}
-          description="Disaster response units registered."
+          description="Emergency response units registered."
         />
       </section>
 

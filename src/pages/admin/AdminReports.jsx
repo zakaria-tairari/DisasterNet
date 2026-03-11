@@ -26,7 +26,7 @@ const AdminReports = () => {
       }
     );
 
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
 
   const handleFilter = (e) => {

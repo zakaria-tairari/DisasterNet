@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import StatusBadge from "./StatusBadge";
 import AltButton from "./AltButton";
 import { getDate } from "../lib/firebaseGetDate";
 import PopupButton from "./PopupButton";
 import ReportMap from "./map/ReportMap";
 import TeamsTable from "./TeamsTable";
+import SidePanel from "./SidePanel";
 
 const ReportsTable = ({ reports }) => {
+  const [selectedReport, setSelectedReport] = useState(null);
+
   return (
+    <>
     <div className="bg-white dark:bg-slate-900/80 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none transition-colors overflow-hidden">
       <table className="w-full text-sm text-left">
         <thead className="bg-slate-50 dark:bg-slate-900/90 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
@@ -54,12 +58,12 @@ const ReportsTable = ({ reports }) => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-2">
-                    <PopupButton
-                      buttonText="Assign team"
-                      style="text-[11px] px-2 py-1 rounded-lg cursor-pointer transition-colors duration-200 text-emerald-600 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/40 hover:bg-emerald-50 dark:hover:bg-emerald-600/10"
+                    <AltButton
+                      variant="success"
+                      onClick={() => setSelectedReport(report)}
                     >
-                      <TeamsTable report={ report } />
-                    </PopupButton>
+                      Assign Team
+                    </AltButton>
                   <PopupButton
                     buttonText="View details"
                     style="text-[11px] px-2 py-1 rounded-lg cursor-pointer transition-colors duration-200 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-500/40 hover:bg-slate-50 dark:hover:bg-slate-600/10"
@@ -96,6 +100,14 @@ const ReportsTable = ({ reports }) => {
         </tbody>
       </table>
     </div>
+      <SidePanel
+        isOpen={!!selectedReport}
+        onClose={() => setSelectedReport(null)}
+        title="Assign a team to this incident"
+      >
+        {selectedReport && <TeamsTable report={selectedReport} />}
+      </SidePanel>
+    </>
   );
 };
 

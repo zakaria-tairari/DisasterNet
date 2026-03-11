@@ -26,7 +26,7 @@ const Header = () => {
         <Link to="/" className="flex items-center gap-2">
           <div className="leading-tight">
             <p className="font-semibold text-lg tracking-wide text-slate-800 dark:text-white transition-colors duration-300">
-              Disaster<span className="text-emerald-500 dark:text-emerald-400">Net</span>
+              Emergency<span className="text-emerald-500 dark:text-emerald-400">Net</span>
             </p>
           </div>
         </Link>

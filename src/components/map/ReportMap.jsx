@@ -4,6 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 // Fix for default Leaflet icon paths in Vite
 import L from "leaflet";
+import TeamsTable from "../TeamsTable";
+import SidePanel from "../SidePanel";
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -16,6 +18,7 @@ L.Icon.Default.mergeOptions({
 
 const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
   const { theme } = useContext(ThemeContext);
+  const [selectedReport, setSelectedReport] = useState(null);
 
   const BOUNDS = [
     [15.5, -17.5], // southwest — bottom of Western Sahara + Atlantic coast
@@ -48,10 +51,10 @@ const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
     const svg = TYPE_ICONS[type] ?? TYPE_ICONS.other;
     const color =
       status === "pending"
-        ? "#f59e0b"
-        : status === "dispached"
-          ? "#3b82f6"
-          : "#10b981";
+        ? "oklch(79.5% 0.184 86.047)"
+        : status === "dispatched"
+          ? "oklch(68.5% 0.169 237.323)"
+          : "oklch(69.6% 0.17 162.48)";
 
     return L.divIcon({
       className: "",
@@ -98,46 +101,55 @@ const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
       : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"; // Positron
 
   return (
-    <MapContainer
-      maxBounds={BOUNDS}
-      minZoom={6}
-      center={center}
-      zoom={zoom}
-      scrollWheelZoom={true}
-      style={{ height: "100%", width: "100%", zIndex: 0 }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url={tileUrl}
-      />
-      {reports.map((report, idx) => (
-        <Marker
-          key={idx}
-          icon={getMarkerIcon(report.type, report.status)}
-          position={[report.location.lat, report.location.lng]}
-        >
-          <Popup>
-            <div className="font-sans">
-              <strong className="text-slate-900 block mb-1">
-                {report.cin} - {report.fullName}
-              </strong>
-              <span className="text-sm text-slate-600 block mb-2">
-                {report.type}
-              </span>
-              <span className="text-xs text-slate-600 block mb-2">
-                {report.description}
-              </span>
-              <button
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 text-xs rounded-md w-full transition-colors"
-              >
-                Assign Team
-              </button>
-            </div>
-            
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <>
+      <MapContainer
+        maxBounds={BOUNDS}
+        minZoom={6}
+        center={center}
+        zoom={zoom}
+        scrollWheelZoom={true}
+        style={{ height: "100%", width: "100%", zIndex: 0 }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url={tileUrl}
+        />
+        {reports.map((report, idx) => (
+          <Marker
+            key={idx}
+            icon={getMarkerIcon(report.type, report.status)}
+            position={[report.location.lat, report.location.lng]}
+          >
+            <Popup>
+              <div className="font-sans">
+                <strong className="text-slate-900 block mb-1">
+                  {report.cin} - {report.fullName}
+                </strong>
+                <span className="text-sm text-slate-600 block mb-2">
+                  {report.type}
+                </span>
+                <span className="text-xs text-slate-600 block mb-2">
+                  {report.description}
+                </span>
+                <button
+                  onClick={() => setSelectedReport(report)}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 text-xs rounded-md w-full transition-colors cursor-pointer"
+                >
+                  Assign Team
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+      <SidePanel
+        isOpen={!!selectedReport}
+        onClose={() => setSelectedReport(null)}
+        title="Assign a team to this incident"
+      >
+        {selectedReport && <TeamsTable report={selectedReport} />}
+      </SidePanel>
+    </>
   );
 };
 

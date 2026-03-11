@@ -32,19 +32,19 @@ const DashboardShell = ({ navItems, children }) => {
         }`}
       >
         {/* Top bar with burger */}
-        <div className="flex sticky top-0 z-50 items-center justify-between w-full px-2 py-2 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex sticky top-0 z-50 items-center justify-between w-full p-2 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
           <div>
             <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-full text-slate-400 dark:text-slate-600 hover:text-emerald-500 cursor-pointer"
+            className="p-2 rounded-full text-sm text-slate-400 dark:text-slate-600 hover:text-emerald-500 cursor-pointer"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
           </button>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <button onClick={logout}
-            className="inline-flex items-center justify-center rounded-lg border border-emerald-500 px-4 py-1.5 text-sm font-semibold text-emerald-600 dark:text-emerald-400 shadow-sm hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-400/10 dark:hover:text-emerald-300 transition-all duration-300 cursor-pointer"
+            className="inline-flex items-center justify-center rounded-lg border border-emerald-500 px-4 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 shadow-sm hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-400/10 dark:hover:text-emerald-300 transition-all duration-300 cursor-pointer"
            >
             Logout
           </button>

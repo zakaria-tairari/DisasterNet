@@ -294,7 +294,7 @@ const Report = () => {
                 </p>
               </div>
               <div className="w-full md:w-auto md:min-w-55">
-                <Button type="submit">Submit report report</Button>
+                <Button type="submit">Submit Report</Button>
               </div>
             </div>
           </form>

@@ -11,7 +11,6 @@ import TeamLayout from "./components/layouts/TeamLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUsers from "./pages/admin/ManageUsers";
 import AdminReports from "./pages/admin/AdminReports";
-import AdminTeams from "./pages/admin/AdminTeams";
 
 // Operator Pages
 import OperatorDashboard from "./pages/operator/OperatorDashboard";
