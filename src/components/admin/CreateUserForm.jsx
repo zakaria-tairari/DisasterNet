@@ -12,6 +12,7 @@ import { AlertContext } from "../../contexts/AlertContext";
 const CreateUserForm = ({ refresh }) => {
   const [role, setRole] = useState("operator");
   const [displayName, setDisplayName] = useState("");
+  const [teamType, setTeamType] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,6 +32,11 @@ const CreateUserForm = ({ refresh }) => {
       return;
     }
 
+    if (role === "team" && !teamType) {
+      setAlert({ type: "error", message: "Team type is required." });
+      return;
+    }
+
     if (password !== confirmPassword) {
       setAlert({ type: "error", message: "Failed password confirmation." });
       return;
@@ -44,6 +50,7 @@ const CreateUserForm = ({ refresh }) => {
         password,
         role,
         region,
+        teamType,
       });
       setAlert({ type: "success", message: "User created successfuly." });
       refresh();
@@ -52,6 +59,7 @@ const CreateUserForm = ({ refresh }) => {
       setPassword("");
       setConfirmPassword("");
       setRegion("");
+      setTeamType("");
     } catch (error) {
       setAlert({ type: "error", message: getFirebaseErrorMessage(error.code) });
       console.log(error.code);
@@ -87,17 +95,16 @@ const CreateUserForm = ({ refresh }) => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           value={confirmPassword}
         />
+        {
+          role !== "admin" && 
         <select
+        defaultValue=""
           value={region}
           onChange={(e) => setRegion(e.target.value)}
-          disabled={role === "admin"}
-          className={`w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm
-        ${role === "admin" ? "text-slate-400 dark:text-slate-600" : "text-slate-900 dark:text-slate-50"}`}
+          className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm text-slate-900 dark:text-slate-50"
         >
-          <option value="">
-            {role === "admin"
-              ? "Region not required for admin"
-              : "Select region"}
+          <option disabled value="">
+              Select region
           </option>
           <option value="casablanca">Casablanca‑Settat</option>
           <option value="rabat">Rabat‑Salé‑Kénitra</option>
@@ -111,6 +118,26 @@ const CreateUserForm = ({ refresh }) => {
           <option value="laayoune">Laâyoune‑Sakia El Hamra</option>
           <option value="dakhla">Dakhla‑Oued Ed Dahab</option>
         </select>
+        }
+        {
+          role === "team" &&
+          <select
+          defaultValue=""
+          value={teamType}
+          onChange={(e) => setTeamType(e.target.value)}
+          className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm text-slate-900 dark:text-slate-50"
+        >
+          <option disabled value="">
+              Type of the field team
+          </option>
+          <option value="fire">Firefighting Unit</option>
+          <option value="flood">Civil Protection Unit</option>
+          <option value="medical">Medical Unit</option>
+          <option value="traffic">Traffic Police Unit</option>
+          <option value="infrastructure">Public Works Unit</option>
+          <option value="other">General Response Unit</option>
+        </select>
+        }
         <Button type="submit">Create Account</Button>
       </form>
     </>

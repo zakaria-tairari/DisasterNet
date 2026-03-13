@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import SideBar from "./SideBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 import ThemeToggle from "./ThemeToggle";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 const DashboardShell = ({ navItems, children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -13,6 +14,14 @@ const DashboardShell = ({ navItems, children }) => {
   const fullWidth = location.pathname.includes("/map");
   
     const logout = async () => {
+      const uid = auth.currentUser.uid;
+
+      const docRef = doc(db, "users", uid);
+      await updateDoc(docRef, {
+        active: false,
+        lastSeen: serverTimestamp()
+      });
+
       await signOut(auth);
       navigate("/", {replace: true});
     }

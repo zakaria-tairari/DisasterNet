@@ -11,7 +11,7 @@ export const createUser = onCall(async (request) => {
   if (!caller.customClaims || caller.customClaims.role !== "admin")
     throw new HttpsError("permission-denied", "Only admins can create users.");
 
-  const { displayName, email, password, role, region } = request.data;
+  const { displayName, email, password, role, region, teamType } = request.data;
 
   if (!displayName || !email || !password || !role)
     throw new HttpsError("invalid-argument", "Missing required fields.");
@@ -21,6 +21,13 @@ export const createUser = onCall(async (request) => {
       "invalid-argument",
       "Region is required for this role.",
     );
+
+    if (role === "team" && !teamType) {
+    throw new HttpsError(
+      "invalid-argument",
+      "Type is required for this role.",
+    );
+  }
 
   try {
     const existing = await admin
@@ -43,6 +50,8 @@ export const createUser = onCall(async (request) => {
 
     const userData = { displayName, email, role };
     if (role !== "admin") userData.region = region;
+
+    if (role === "team") userData.type = teamType;
 
     await admin.firestore().collection("users").doc(newUser.uid).set(userData);
 

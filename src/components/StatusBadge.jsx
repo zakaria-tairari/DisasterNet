@@ -19,7 +19,7 @@ const StatusBadge = ({ children, variant = "success" }) => {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ${classes}`}
+      className={`inline-flex uppercase items-center rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ${classes}`}
     >
       {children}
     </span>

@@ -11,6 +11,7 @@ const EditUserForm = ({ user, refresh }) => {
   const [displayName, setDisplayName] = useState(user.displayName);
   const [email, setEmail] = useState(user.email);
   const [region, setRegion] = useState(user.region || "");
+  const [teamType, setTeamType] = useState(user.type || "");
 
   const handleEditUser = async (e) => {
     e.preventDefault();
@@ -28,10 +29,15 @@ const EditUserForm = ({ user, refresh }) => {
       return;
     }
 
+    if (user.role === "team" && !teamType) {
+      setAlert({ type: "error", message: "Type is required for this role." });
+      return;
+    }
+
     const editUser = httpsCallable(functions, "editUser");
 
     try {
-      await editUser({ uid: user.id, displayName, email, region });
+      await editUser({ uid: user.id, displayName, email, region, teamType });
       setAlert({ type: "success", message: "User updated successfully." });
       refresh();
     } catch (error) {
@@ -56,11 +62,12 @@ const EditUserForm = ({ user, refresh }) => {
           value={email}
         />
         {user.role !== "admin" && (
-          <label> Region
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-100 transition-colors duration-300">Region
           <select
+            defaultValue=""
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className={`w-full px-4 py-2.5 rounded-lg mb-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm`}
+            className={`w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm`}
           >
             <option value="">Select region</option>
             <option value="casablanca">Casablanca‑Settat</option>
@@ -77,6 +84,27 @@ const EditUserForm = ({ user, refresh }) => {
           </select>
           </label>
         )}
+        {
+          user.role === "team" &&
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-100 transition-colors duration-300">Type
+          <select
+          defaultValue=""
+          value={teamType}
+          onChange={(e) => setTeamType(e.target.value)}
+          className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm text-slate-900 dark:text-slate-50"
+        >
+          <option disabled value="">
+              Type of the field team
+          </option>
+          <option value="fire">Firefighting Unit</option>
+          <option value="flood">Civil Protection Unit</option>
+          <option value="medical">Medical Unit</option>
+          <option value="traffic">Traffic Police Unit</option>
+          <option value="infrastructure">Public Works Unit</option>
+          <option value="other">General Response Unit</option>
+        </select>
+        </label>
+        }
 
         <Button type="submit">Submit changes</Button>
       </form>

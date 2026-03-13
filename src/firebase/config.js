@@ -10,7 +10,7 @@ const firebaseConfig = {
   storageBucket: "disasternet-f2a43.firebasestorage.app",
   messagingSenderId: "613286604605",
   appId: "1:613286604605:web:d9eb29e7a90b9bd1d75f54",
-  measurementId: "G-PMEM77ZXM4"
+  measurementId: "G-PMEM77ZXM4",
 };
 
 const app = initializeApp(firebaseConfig);

@@ -6,6 +6,7 @@ import PopupButton from "./PopupButton";
 import ReportMap from "./map/ReportMap";
 import TeamsTable from "./TeamsTable";
 import SidePanel from "./SidePanel";
+import TeamProgressView from "./TeamProgressView";
 
 const ReportsTable = ({ reports }) => {
   const [selectedReport, setSelectedReport] = useState(null);
@@ -43,11 +44,13 @@ const ReportsTable = ({ reports }) => {
                 <td className="px-6 py-4">
                   <StatusBadge
                     variant={
-                      report.status === "resolved"
-                        ? "success"
+                      report.status === "pending"
+                        ? "danger"
                         : report.status === "dispatched"
+                          ? "warning"
+                          : report.status === "on_site"
                           ? "safe"
-                          : "warning"
+                          : "success"
                     }
                   >
                     {report.status}
@@ -62,7 +65,7 @@ const ReportsTable = ({ reports }) => {
                       variant="success"
                       onClick={() => setSelectedReport(report)}
                     >
-                      Assign Team
+                      { report.status === "pending" ? "Assign Team" : "View Progress"}
                     </AltButton>
                   <PopupButton
                     buttonText="View details"
@@ -103,9 +106,9 @@ const ReportsTable = ({ reports }) => {
       <SidePanel
         isOpen={!!selectedReport}
         onClose={() => setSelectedReport(null)}
-        title="Assign a team to this incident"
+        title={ selectedReport?.status === "pending" ? "Assign a team to this incident" : "View team progress" }
       >
-        {selectedReport && <TeamsTable report={selectedReport} />}
+        {selectedReport?.status === "pending" ? <TeamsTable report={selectedReport} /> : <TeamProgressView report={selectedReport}/>}
       </SidePanel>
     </>
   );

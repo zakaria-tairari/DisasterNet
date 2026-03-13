@@ -3,14 +3,14 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import SocialButton from "../components/SocialButton";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import Alert from "../components/Alert";
 import { getFirebaseErrorMessage } from "../lib/firebaseErrors";
 import { AlertContext } from "../contexts/AlertContext";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { updateDoc, doc } from "firebase/firestore";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Login = () => {
     }
   }, [user, loading]);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setAlert({ type: "error", message: "All fields are required" });
@@ -33,7 +33,14 @@ const Login = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
+
+      const docRef = doc(db, "users", uid);
+      await updateDoc(docRef, {
+        active: true,
+      });
+      
     } catch (error) {
       setAlert({ type: "error", message: getFirebaseErrorMessage(error.code) });
     }
@@ -55,7 +62,7 @@ const Login = () => {
               Access your real-time report coordination dashboards.
             </p>
           </div>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleLogin}>
             <Input
               id="email"
               label="Email"

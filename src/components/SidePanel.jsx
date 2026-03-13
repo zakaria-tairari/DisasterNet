@@ -31,9 +31,9 @@ export default function SidePanel({
         ref={panelRef}
         className={`fixed top-0 right-0 h-full w-full max-w-md z-1000 flex flex-col
           border-l border-emerald-500/30 dark:border-emerald-500/40
-          bg-white dark:bg-slate-900 shadow
+          bg-white dark:bg-slate-950
           transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+          ${isOpen ? "translate-x-0 shadow-xl" : "translate-x-full"}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-emerald-500/20 dark:border-emerald-500/30">

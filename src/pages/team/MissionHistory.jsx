@@ -20,6 +20,7 @@ const MissionHistory = () => {
     const q = query(
       collection(db, "reports"),
       where("assignedTeam", "==", user.teamId),
+      where("status", "==", "resolved"),
       orderBy("createdAt", "desc")
     );
 
@@ -27,8 +28,7 @@ const MissionHistory = () => {
       q,
       (snap) => {
         const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        // Filter resolved locally to avoid compound index requirements during early dev
-        setMissions(data.filter(m => m.status === "Resolved"));
+        setMissions(data);
         setLoading(false);
       },
       (error) => {

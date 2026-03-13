@@ -21,7 +21,8 @@ const TeamDashboard = () => {
 
     const q = query(
       collection(db, "reports"),
-      where("assignedTeam", "==", user.teamId)
+      where("assignedTeam", "==", user.teamId),
+      where("status", "!=", "resolved"),
     );
 
     const unsubscribe = onSnapshot(q, (snap) => {
@@ -110,11 +111,11 @@ const TeamDashboard = () => {
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1.5">
                         {report.status !== "On Site" && (
-                          <AltButton onClick={() => handleUpdateStatus(report.id, "On Site", "On Mission")}>
+                          <AltButton onClick={() => handleUpdateStatus(report.id, "on site", "on mission")}>
                             Mark as on site
                           </AltButton>
                         )}
-                        <AltButton onClick={() => handleUpdateStatus(report.id, "Resolved", "Available")}>
+                        <AltButton onClick={() => handleUpdateStatus(report.id, "resolved", "available")}>
                           Mark as resolved
                         </AltButton>
                       </div>

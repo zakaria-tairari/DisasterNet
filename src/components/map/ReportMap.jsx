@@ -1,24 +1,74 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-// Fix for default Leaflet icon paths in Vite
+import MarkerClusterGroup from "react-leaflet-cluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import L from "leaflet";
 import TeamsTable from "../TeamsTable";
 import SidePanel from "../SidePanel";
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+import { getDoc } from "firebase/firestore";
+import TeamProgressView from "../TeamProgressView";
 
 const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
   const { theme } = useContext(ThemeContext);
   const [selectedReport, setSelectedReport] = useState(null);
+  const [enrichedReports, setEnrichedReports] = useState([]);
+
+useEffect(() => {
+  if (!reports || reports.length === 0) {
+    setEnrichedReports([]);
+    return;
+  }
+
+  const enrichReports = async () => {
+    const updatedReports = await Promise.all(
+      reports.map(async (report) => {
+        if (!report.assignedTeam) return report;
+
+        try {
+          const teamSnap = await getDoc(report.assignedTeam);
+
+          if (!teamSnap.exists()) return report;
+
+          const teamData = teamSnap.data();
+
+          return {
+            ...report,
+            teamName: teamData.displayName || null,
+          };
+        } catch (error) {
+          console.error("Error fetching team:", error);
+          return report;
+        }
+      })
+    );
+
+    setEnrichedReports(updatedReports);
+  };
+
+  enrichReports();
+}, [reports]);
+
+  const STATUS_STYLES = {
+  pending: {
+    text: "text-red-600",
+    dot: "bg-red-500",
+  },
+  dispatched: {
+    text: "text-yellow-600",
+    dot: "bg-yellow-500",
+  },
+  on_site: {
+    text: "text-blue-600",
+    dot: "bg-blue-500",
+  },
+  resolved: {
+    text: "text-emerald-600",
+    dot: "bg-emerald-500",
+  },
+};
 
   const BOUNDS = [
     [15.5, -17.5], // southwest — bottom of Western Sahara + Atlantic coast
@@ -47,13 +97,57 @@ const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
       </svg>`,
   };
 
+  const getClusterIcon = (cluster) => {
+  return L.divIcon({
+      className: "",
+      html: `
+      <div style="position: relative; width: 40px; height: 40px;">
+        <div style="
+          position: absolute;
+          width: 40px; height: 40px;
+          border-radius: 50%;
+          background: oklch(63.7% 0.237 25.331);
+          opacity: 0.4;
+          animation: pulse 1.8s ease-out infinite;
+        "></div>
+        <div style="
+          font-size: 16px;
+          font-weight: 600;
+          color: #fff;
+          position: absolute;
+          width: 40px; height: 40px;
+          border-radius: 50%;
+          background: oklch(63.7% 0.237 25.331);
+          opacity: 0.8;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1;
+        ">${cluster.getChildCount()}</div>
+      </div>
+      <style>
+        @keyframes pulse {
+          0%   { transform: scale(1); opacity: 0.4; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+      </style>
+    `,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, -18],
+    });
+};
+
   const getMarkerIcon = (type, status) => {
     const svg = TYPE_ICONS[type] ?? TYPE_ICONS.other;
     const color =
       status === "pending"
-        ? "oklch(79.5% 0.184 86.047)"
+        ? "oklch(63.7% 0.237 25.331)"
         : status === "dispatched"
-          ? "oklch(68.5% 0.169 237.323)"
+          ? "oklch(79.5% 0.184 86.047)"
+          : status === "on site"
+          ? "oklch(54.6% 0.245 262.881)"
           : "oklch(69.6% 0.17 162.48)";
 
     return L.divIcon({
@@ -73,7 +167,6 @@ const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
           width: 32px; height: 32px;
           border-radius: 50%;
           background: ${color};
-          border: 2px solid white;
           box-shadow: 0 2px 6px rgba(0,0,0,0.35);
           display: flex;
           align-items: center;
@@ -100,6 +193,7 @@ const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
       ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" // Dark Matter
       : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"; // Positron
 
+
   return (
     <>
       <MapContainer
@@ -114,40 +208,70 @@ const ReportMap = ({ center = [31.7917, -7.0926], zoom = 6, reports = [] }) => {
           attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={tileUrl}
         />
-        {reports.map((report, idx) => (
-          <Marker
-            key={idx}
-            icon={getMarkerIcon(report.type, report.status)}
-            position={[report.location.lat, report.location.lng]}
-          >
-            <Popup>
-              <div className="font-sans">
-                <strong className="text-slate-900 block mb-1">
-                  {report.cin} - {report.fullName}
-                </strong>
-                <span className="text-sm text-slate-600 block mb-2">
-                  {report.type}
-                </span>
-                <span className="text-xs text-slate-600 block mb-2">
-                  {report.description}
-                </span>
-                <button
-                  onClick={() => setSelectedReport(report)}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 text-xs rounded-md w-full transition-colors cursor-pointer"
-                >
-                  Assign Team
-                </button>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        <MarkerClusterGroup 
+        chunkedLoading
+        maxClusterRadius={30}
+        iconCreateFunction={getClusterIcon}
+        >
+          {enrichedReports.map((report, idx) => (
+            <Marker
+              key={idx}
+              icon={getMarkerIcon(report.type, report.status)}
+              position={[report.location.lat, report.location.lng]}
+            >
+              <Popup>
+                <div className="font-sans">
+                  <strong className="text-slate-900 block mb-1">
+                    {report.cin} - {report.fullName}
+                  </strong>
+
+                  <span className={`inline-flex items-center gap-1 text-xs font-semibold ${STATUS_STYLES[report.status].text}`}>
+                        <span className={`w-2 h-2 rounded-full ${STATUS_STYLES[report.status].dot} inline-block`} />
+                        {report.status}
+                  </span>
+
+                  <span className="text-sm text-slate-600 block mb-2">
+                    {report.type}
+                  </span>
+
+                  <span className="text-xs text-slate-600 block mb-2">
+                    {report.description}
+                  </span>
+
+
+                  {report.assignedTeam && (
+                    <span className="text-sm text-emerald-600 block mb-2 font-medium">
+                      Assigned Team: {report.teamName || "Loading..."}
+                    </span>
+                  )}
+
+                  {report.assignedTeam ? (
+                    <button
+                      onClick={() => setSelectedReport(report)}
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 text-xs rounded-md w-full transition-colors cursor-pointer"
+                    >
+                      View Progress
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setSelectedReport(report)}
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 text-xs rounded-md w-full transition-colors cursor-pointer"
+                    >
+                      Assign Team
+                    </button>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
       <SidePanel
         isOpen={!!selectedReport}
         onClose={() => setSelectedReport(null)}
-        title="Assign a team to this incident"
+        title={ selectedReport?.status === "pending" ? "Assign a team to this incident" : "View team progress" }
       >
-        {selectedReport && <TeamsTable report={selectedReport} />}
+        {selectedReport?.status === "pending" ? <TeamsTable report={selectedReport} /> : <TeamProgressView report={selectedReport}/>}
       </SidePanel>
     </>
   );

@@ -13,7 +13,7 @@ export const editUser = onCall(async (request) => {
     throw new HttpsError("permission-denied", "Only admins can edit users.");
   }
 
-  const { uid, displayName, email, region } = request.data;
+  const { uid, displayName, email, region, teamType } = request.data;
 
   if (!uid) {
     throw new HttpsError("invalid-argument", "User ID is required.");
@@ -38,6 +38,13 @@ export const editUser = onCall(async (request) => {
     throw new HttpsError(
       "invalid-argument",
       "Region is required for this role.",
+    );
+  }
+
+    if (role === "team" && !teamType) {
+    throw new HttpsError(
+      "invalid-argument",
+      "Type is required for this role.",
     );
   }
 
@@ -66,6 +73,13 @@ export const editUser = onCall(async (request) => {
     } else {
       userData.region = admin.firestore.FieldValue.delete();
     }
+
+    if (role === "team") {
+      userData.type = teamType;
+    } else {
+      userData.type = admin.firestore.FieldValue.delete();
+    }
+
     if (email) userData.email = email;
 
     await admin.firestore().collection("users").doc(uid).update(userData);
