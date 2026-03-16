@@ -7,6 +7,7 @@ import {
   runTransaction,
   onSnapshot,
   getDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 import Button from "./Button";
@@ -216,6 +217,7 @@ const TeamsTable = ({ report }) => {
         transaction.update(incidentRef, {
           assignedTeam: teamRef,
           status: "dispatched",
+          dispatchedAt: serverTimestamp(),
         });
       });
 
@@ -297,7 +299,7 @@ const TeamsTable = ({ report }) => {
                     </div>
                   </div>
 
-                  {isBusy ? (
+                  {isBusy && (
                     <div className="mt-2 space-y-1">
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
                         <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
@@ -321,12 +323,6 @@ const TeamsTable = ({ report }) => {
                         </p>
                       )}
                     </div>
-                  ) : (
-                    isSelected && (
-                      <span className="absolute top-2 right-2 text-sm font-semibold text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 px-2 py-1 rounded">
-                        Selected
-                      </span>
-                    )
                   )}
                 </div>
               );

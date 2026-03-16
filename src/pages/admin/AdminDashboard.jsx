@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MetricCard from "../../components/MetricCard";
-import { collection, onSnapshot, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, getDocs, query, orderBy, where } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const unsubscribe = () => {
-      const q = query(collection(db, "reports"), orderBy("createdAt", "desc"));
+      const q = query(collection(db, "reports"), where("status", "not-in", ["resolved"]), orderBy("createdAt", "desc"));
       onSnapshot(
         q,
         (snap) => {
@@ -70,24 +70,26 @@ const AdminDashboard = () => {
     { name: "Sun", reports: 3, resolved: 3 },
   ];
 
-  const regionData = [
-    {
-      region: "Casablanca",
-      count: reports.filter((r) => r.region?.includes("casablanca")).length,
-    },
-    {
-      region: "Rabat",
-      count: reports.filter((r) => r.region?.includes("rabat")).length,
-    },
-    {
-      region: "Marrakech",
-      count: reports.filter((r) => r.region?.includes("marrakech")).length,
-    },
-    {
-      region: "Tangier",
-      count: reports.filter((r) => r.region?.includes("tangier")).length,
-    },
-  ];
+  const moroccoRegions = [
+  "casablanca",
+  "rabat",
+  "marrakech",
+  "tangier",
+  "oriental",
+  "fes",
+  "beni-mellal",
+  "souss",
+  "guelmim",
+  "laayoune",
+  "dakhla",
+];
+
+const regionData = moroccoRegions.map(region => ({
+  region,
+  count: reports.filter(r =>
+    r.region?.toLowerCase().includes(region.toLowerCase())
+  ).length
+}));
 
   const mockNationalReports = [
     {
@@ -136,133 +138,62 @@ const AdminDashboard = () => {
       </section>
 
       {/* Analytics Charts */}
-      <section className="grid md:grid-cols-2 gap-5 pt-2">
-        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none transition-colors">
-          <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">
-            Report Volume (7 Days)
-          </h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={chartData}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="colorReports" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient
-                    id="colorResolved"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#334155"
-                  opacity={0.2}
-                />
-                <XAxis
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#64748b" }}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#64748b" }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#1e293b",
-                    borderColor: "#334155",
-                    color: "#f8fafc",
-                    borderRadius: "8px",
-                  }}
-                  itemStyle={{ color: "#fff" }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: "12px" }} />
-                <Area
-                  type="monotone"
-                  dataKey="reports"
-                  name="New Reports"
-                  stroke="#ef4444"
-                  fillOpacity={1}
-                  fill="url(#colorReports)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="resolved"
-                  name="Resolved"
-                  stroke="#10b981"
-                  fillOpacity={1}
-                  fill="url(#colorResolved)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none transition-colors">
-          <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">
-            Active Reports by Region
-          </h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={regionData}
-                layout="vertical"
-                margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  horizontal={false}
-                  stroke="#334155"
-                  opacity={0.2}
-                />
-                <XAxis
-                  type="number"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#64748b" }}
-                />
-                <YAxis
-                  dataKey="region"
-                  type="category"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#64748b" }}
-                  width={80}
-                />
-                <Tooltip
-                  cursor={{ fill: "transparent" }}
-                  contentStyle={{
-                    backgroundColor: "#1e293b",
-                    borderColor: "#334155",
-                    color: "#f8fafc",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Bar
-                  dataKey="count"
-                  name="Active Cases"
-                  fill="#00bd7e"
-                  radius={[0, 4, 4, 0]}
-                  barSize={20}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </section>
+            <section className="grid gap-5 pt-2">
+              <div className="bg-white dark:bg-slate-900/80 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none transition-colors">
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">
+                  Active Reports by Region
+                </h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={regionData}
+                      layout="horizontal"
+                      margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke="#334155"
+                        opacity={0.2}
+                      />
+      
+                      <XAxis
+                        dataKey="region"
+                        type="category"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "#64748b" }}
+                      />
+      
+                      <YAxis
+                        type="number"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "#64748b" }}
+                      />
+      
+                      <Tooltip
+                        cursor={{ fill: "transparent" }}
+                        contentStyle={{
+                          backgroundColor: "#1e293b",
+                          borderColor: "#334155",
+                          color: "#f8fafc",
+                          borderRadius: "8px",
+                        }}
+                      />
+      
+                      <Bar
+                        dataKey="count"
+                        name="Active Cases"
+                        fill="#00bd7e"
+                        radius={[4, 4, 0, 0]}
+                        barSize={30}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </section>
 
       {/* National Map Overview */}
       <section className="space-y-2 pt-2">

@@ -19,7 +19,7 @@ import RegionTeams from "./pages/operator/RegionTeams";
 import RegionMap from "./pages/operator/RegionMap";
 
 // Team Pages
-import TeamDashboard from "./pages/team/TeamDashboard";
+import TeamMap from "./pages/team/TeamDashboard";
 import MissionHistory from "./pages/team/MissionHistory";
 import TeamProfile from "./pages/team/TeamProfile";
 
@@ -31,6 +31,7 @@ import Loading from "./components/Loading";
 import { AlertContext } from "./contexts/AlertContext";
 import Alert from "./components/Alert";
 import AdminMap from "./pages/admin/AdminMap";
+import TeamDashboard from "./pages/team/TeamDashboard";
 
 function App() {
   const { loading } = useContext(AuthContext);

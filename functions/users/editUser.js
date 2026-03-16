@@ -9,8 +9,8 @@ export const editUser = onCall(async (request) => {
   const callerUid = request.auth.uid;
   const caller = await admin.auth().getUser(callerUid);
 
-  if (!caller.customClaims || caller.customClaims.role !== "admin") {
-    throw new HttpsError("permission-denied", "Only admins can edit users.");
+  if (!caller.customClaims || caller.customClaims.role === "team") {
+    throw new HttpsError("permission-denied", "Only admins and operators can edit users.");
   }
 
   const { uid, displayName, email, region, teamType } = request.data;

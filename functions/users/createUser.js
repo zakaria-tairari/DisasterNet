@@ -8,8 +8,8 @@ export const createUser = onCall(async (request) => {
   const callerUid = request.auth.uid;
   const caller = await admin.auth().getUser(callerUid);
 
-  if (!caller.customClaims || caller.customClaims.role !== "admin")
-    throw new HttpsError("permission-denied", "Only admins can create users.");
+  if (!caller.customClaims || caller.customClaims.role === "team")
+    throw new HttpsError("permission-denied", "Only admins and operators can create users.");
 
   const { displayName, email, password, role, region, teamType } = request.data;
 

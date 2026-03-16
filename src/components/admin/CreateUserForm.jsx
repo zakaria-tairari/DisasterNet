@@ -98,7 +98,6 @@ const CreateUserForm = ({ refresh }) => {
         {
           role !== "admin" && 
         <select
-        defaultValue=""
           value={region}
           onChange={(e) => setRegion(e.target.value)}
           className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm text-slate-900 dark:text-slate-50"
@@ -122,7 +121,6 @@ const CreateUserForm = ({ refresh }) => {
         {
           role === "team" &&
           <select
-          defaultValue=""
           value={teamType}
           onChange={(e) => setTeamType(e.target.value)}
           className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors shadow-sm text-slate-900 dark:text-slate-50"

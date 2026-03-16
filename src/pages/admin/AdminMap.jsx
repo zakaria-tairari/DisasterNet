@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReportMap from '../../components/map/ReportMap'
 import { db } from '../../firebase/config';
-import { onSnapshot, collection } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, orderBy } from 'firebase/firestore';
 import Loading from '../../components/Loading';
 
 const AdminMap = () => {
@@ -11,8 +11,9 @@ const AdminMap = () => {
   
     useEffect(() => {
         const unsubscribe = () => {
+          const q = query(collection(db, "reports"), where("status", "not-in", ["resolved"]), orderBy("createdAt", "desc"));
           onSnapshot(
-            collection(db, "reports"),
+            q,
             (snap) => {
               setReports(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
               setPageLoading(false);

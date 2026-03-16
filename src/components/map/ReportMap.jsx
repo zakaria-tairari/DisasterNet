@@ -146,9 +146,7 @@ useEffect(() => {
         ? "oklch(63.7% 0.237 25.331)"
         : status === "dispatched"
           ? "oklch(79.5% 0.184 86.047)"
-          : status === "on site"
-          ? "oklch(54.6% 0.245 262.881)"
-          : "oklch(69.6% 0.17 162.48)";
+          : "oklch(54.6% 0.245 262.881)"
 
     return L.divIcon({
       className: "",
@@ -219,6 +217,8 @@ useEffect(() => {
               icon={getMarkerIcon(report.type, report.status)}
               position={[report.location.lat, report.location.lng]}
             >
+            {
+              enrichedReports.length > 1 &&
               <Popup>
                 <div className="font-sans">
                   <strong className="text-slate-900 block mb-1">
@@ -262,6 +262,7 @@ useEffect(() => {
                   )}
                 </div>
               </Popup>
+            }   
             </Marker>
           ))}
         </MarkerClusterGroup>

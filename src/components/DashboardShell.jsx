@@ -11,7 +11,7 @@ const DashboardShell = ({ navItems, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fullWidth = location.pathname.includes("/map");
+  const fullWidth = location.pathname.includes("/map") || location.pathname == "/team";
   
     const logout = async () => {
       const uid = auth.currentUser.uid;

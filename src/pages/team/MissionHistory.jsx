@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import StatusBadge from "../../components/StatusBadge";
 import { getDate } from "../../lib/firebaseGetDate";
 import { AuthContext } from "../../contexts/AuthContext";
-import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, where, orderBy, onSnapshot, doc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Loading from "../../components/Loading";
 
@@ -12,33 +12,36 @@ const MissionHistory = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.teamId) {
+  if (!user) {
+    setLoading(false);
+    return;
+  }
+
+  const teamRef = doc(db, "users", user.uid);
+
+  const q = query(
+    collection(db, "reports"),
+    where("assignedTeam", "==", teamRef),
+    where("status", "==", "resolved"),
+    orderBy("createdAt", "desc")
+  );
+
+  const unsubscribe = onSnapshot(
+    q,
+    (snap) => {
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setMissions(data);
       setLoading(false);
-      return;
+    },
+    (error) => {
+      console.error("Error fetching mission history:", error);
+      setLoading(false);
     }
+  );
 
-    const q = query(
-      collection(db, "reports"),
-      where("assignedTeam", "==", user.teamId),
-      where("status", "==", "resolved"),
-      orderBy("createdAt", "desc")
-    );
+  return () => unsubscribe();
+}, [user]);
 
-    const unsubscribe = onSnapshot(
-      q,
-      (snap) => {
-        const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setMissions(data);
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error fetching mission history:", error);
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [user]);
 
   if (loading) return <Loading />;
 
@@ -61,7 +64,7 @@ const MissionHistory = () => {
               <th className="px-6 py-4">Context</th>
               <th className="px-6 py-4">Date Resolved</th>
               <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-right">Time on Site</th>
+              <th className="px-6 py-4 text-right">Time on_site</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
