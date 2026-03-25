@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6181Lq1Uw3vLOFu4cZGBTt0Mfr13_zfY",
@@ -17,6 +18,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const functions = getFunctions(app);
+export const messaging = getMessaging(app);
 
 if (true) {
   connectAuthEmulator(auth, "http://localhost:9099");

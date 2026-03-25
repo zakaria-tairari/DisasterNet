@@ -300,13 +300,7 @@ const TeamMap = ({ incident, zoom = 6, updateStatus }) => {
                   {incident.description}
                 </span>
 
-                {incident.assignedTeam && (
-                  <span className="text-sm text-emerald-600 block mb-2 font-medium">
-                    Assigned Team: {incident.teamName || "Loading..."}
-                  </span>
-                )}
-
-                {incident.status === "dispached" ? (
+                {incident.status === "dispatched" ? (
                   <button
                     onClick={() => updateStatus(incident.id, "on_site", "on_mission")}
                     className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 text-xs rounded-md w-full transition-colors cursor-pointer"

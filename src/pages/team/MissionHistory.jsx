@@ -60,28 +60,31 @@ const MissionHistory = () => {
         <table className="w-full text-sm text-left">
           <thead className="bg-slate-50 dark:bg-slate-900/90 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             <tr>
-              <th className="px-6 py-4">Report ID</th>
+              <th className="px-6 py-4">Reporter infos</th>
               <th className="px-6 py-4">Context</th>
-              <th className="px-6 py-4">Date Resolved</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-right">Time on_site</th>
+              <th className="px-6 py-4 text-right">Time reported</th>
+              <th className="px-6 py-4 text-right">Time dispatched</th>
+              <th className="px-6 py-4 text-right">Time on site</th>
+              <th className="px-6 py-4 text-right">Time resolved</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {missions.length > 0 ? (
               missions.map((mission) => (
                 <tr key={mission.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-100">{mission.id}</td>
+                  <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-100">{mission.cin} - {mission.fullName}</td>
                   <td className="px-6 py-4 text-slate-700 dark:text-slate-300">{mission.type}</td>
-                  <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
-                    {mission.createdAt ? getDate(mission.createdAt) : "Unknown Date"}
+                  <td className="px-6 py-4 text-slate-500 text-right dark:text-slate-400">
+                    {mission.createdAt ? getDate(mission.createdAt) : "Unknown"}
                   </td>
-                  <td className="px-6 py-4">
-                    <StatusBadge variant="success">{mission.status}</StatusBadge>
+                  <td className="px-6 py-4 text-slate-500 text-right dark:text-slate-400">
+                    {mission.dispatchedAt ? getDate(mission.dispatchedAt) : "Unknown"}
                   </td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300 text-right font-medium">
-                    {/* Placeholder for actual duration math if added to schema later */}
-                    --
+                  <td className="px-6 py-4 text-slate-500 text-right dark:text-slate-400">
+                    {mission.onSiteAt ? getDate(mission.onSiteAt) : "Unknown"}
+                  </td>
+                  <td className="px-6 py-4 text-slate-500 text-right dark:text-slate-400">
+                    {mission.resolvedAt ? getDate(mission.resolvedAt) : "Unknown"}
                   </td>
                 </tr>
               ))

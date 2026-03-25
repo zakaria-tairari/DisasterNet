@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import SocialButton from "../components/SocialButton";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
@@ -33,15 +32,21 @@ const Login = () => {
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       const uid = userCredential.user.uid;
 
       const docRef = doc(db, "users", uid);
       await updateDoc(docRef, {
         active: true,
       });
-      
     } catch (error) {
+      console.log(error);
+  console.log(error.code);
+  console.log(error.message);
       setAlert({ type: "error", message: getFirebaseErrorMessage(error.code) });
     }
   };
@@ -80,35 +85,8 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <div className="flex items-center justify-between text-xs">
-              <label className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="h-3.5 w-3.5 rounded border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-emerald-500 focus:ring-emerald-500 cursor-pointer transition-colors"
-                />
-                Remember this device
-              </label>
-            </div>
-
             <Button type="submit">Sign In to Dashboard</Button>
           </form>
-
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                Or continue with
-              </span>
-              <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-            </div>
-
-            <div className="flex gap-4">
-              <SocialButton>
-                <span className="mr-2">🌐</span>
-                Sign in with Google
-              </SocialButton>
-            </div>
-          </div>
 
           <p className="text-[11px] text-slate-400/80 text-center leading-relaxed">
             Access is restricted to authorized personnel only. All actions are

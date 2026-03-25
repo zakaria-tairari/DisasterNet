@@ -11,18 +11,6 @@ import {
 import { db } from "../../firebase/config";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
 import ReportMap from "../../components/map/ReportMap";
 import ReportsTable from "../../components/ReportsTable";
 import { AuthContext } from "../../contexts/AuthContext";

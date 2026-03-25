@@ -19,7 +19,6 @@ import RegionTeams from "./pages/operator/RegionTeams";
 import RegionMap from "./pages/operator/RegionMap";
 
 // Team Pages
-import TeamMap from "./pages/team/TeamDashboard";
 import MissionHistory from "./pages/team/MissionHistory";
 import TeamProfile from "./pages/team/TeamProfile";
 
@@ -32,9 +31,10 @@ import { AlertContext } from "./contexts/AlertContext";
 import Alert from "./components/Alert";
 import AdminMap from "./pages/admin/AdminMap";
 import TeamDashboard from "./pages/team/TeamDashboard";
+import Notifications from "./components/Notifications";
 
 function App() {
-  const { loading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const { alert } = useContext(AlertContext);
 
   if (loading) return <Loading />
@@ -47,6 +47,7 @@ function App() {
           message={alert.message}
           onClose={prev => ({...prev, message: ""})}
         />
+        {user && <Notifications user={user} />}
         <Routes>
           {/* Guest routes */}
           <Route element={<GuestMiddleware />}>

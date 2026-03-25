@@ -217,8 +217,6 @@ useEffect(() => {
               icon={getMarkerIcon(report.type, report.status)}
               position={[report.location.lat, report.location.lng]}
             >
-            {
-              enrichedReports.length > 1 &&
               <Popup>
                 <div className="font-sans">
                   <strong className="text-slate-900 block mb-1">
@@ -262,7 +260,6 @@ useEffect(() => {
                   )}
                 </div>
               </Popup>
-            }   
             </Marker>
           ))}
         </MarkerClusterGroup>

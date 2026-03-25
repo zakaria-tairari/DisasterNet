@@ -3,7 +3,7 @@ import StatusBadge from "../../components/StatusBadge";
 import Button from "../../components/Button";
 import AltButton from "../../components/AltButton";
 import { AuthContext } from "../../contexts/AuthContext";
-import { collection, query, where, onSnapshot, doc, updateDoc, deleteField } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc, updateDoc, deleteField, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Loading from "../../components/Loading";
 import { getDate } from "../../lib/firebaseGetDate";
@@ -42,12 +42,18 @@ const TeamDashboard = () => {
 
   const handleUpdateStatus = async (reportId, newReportStatus, newTeamStatus) => {
     try {
-      // 1. Update Report Status
-      await updateDoc(doc(db, "reports", reportId), {
-        status: newReportStatus
-      });
+      if (newReportStatus === "on_site") {
+        await updateDoc(doc(db, "reports", reportId), {
+          status: newReportStatus,
+          onSiteAt: serverTimestamp()
+        });
+      } else if (newReportStatus === "resolved") {
+        await updateDoc(doc(db, "reports", reportId), {
+          status: newReportStatus,
+          resolvedAt: serverTimestamp()
+        });
+      }
 
-      // 2. Update Team Status if provided
       if (newTeamStatus && user) {
         await updateDoc(doc(db, "users", user.uid), {
           status: newTeamStatus
