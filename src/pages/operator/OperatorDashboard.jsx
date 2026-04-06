@@ -47,7 +47,8 @@ const OperatorDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const snap = await getDocs(collection(db, "users"));
+      const q = query(collection(db, "users"), where("role", "==", "team"), where("region", "==", user.region));
+      const snap = await getDocs(q);
       setUserAccounts(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     } catch (error) {
       console.error(error);
@@ -126,14 +127,9 @@ const OperatorDashboard = () => {
           description="Across all regions in the last 24h."
         />
         <MetricCard
-          title="Avg response time"
-          value="12 min"
-          description="Based on dispatched reports this week."
-        />
-        <MetricCard
-          title="Accounts"
+          title="Region teams"
           value={userAccounts.length}
-          description="Admin, operator and field teams nationwide."
+          description="Field teams in the region."
         />
       </section>
 

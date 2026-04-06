@@ -1,8 +1,6 @@
 import { onDocumentUpdated } from "firebase-functions/v2/firestore";
 import admin from "firebase-admin";
 
-admin.initializeApp();
-
 export const notifyTeamAssignment = onDocumentUpdated(
   "reports/{reportId}",
   async (event) => {

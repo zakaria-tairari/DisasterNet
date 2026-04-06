@@ -1,27 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
-import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-import { getMessaging } from "firebase/messaging";
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD6181Lq1Uw3vLOFu4cZGBTt0Mfr13_zfY",
-  authDomain: "disasternet-f2a43.firebaseapp.com",
-  projectId: "disasternet-f2a43",
-  storageBucket: "disasternet-f2a43.firebasestorage.app",
-  messagingSenderId: "613286604605",
-  appId: "1:613286604605:web:d9eb29e7a90b9bd1d75f54",
-  measurementId: "G-PMEM77ZXM4",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const functions = getFunctions(app);
-export const messaging = getMessaging(app);
-
-if (true) {
-  connectAuthEmulator(auth, "http://localhost:9099");
-  connectFirestoreEmulator(db, "localhost", 8080);
-  connectFunctionsEmulator(functions, "localhost", 5001);
-}

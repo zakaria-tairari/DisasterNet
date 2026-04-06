@@ -146,7 +146,9 @@ useEffect(() => {
         ? "oklch(63.7% 0.237 25.331)"
         : status === "dispatched"
           ? "oklch(79.5% 0.184 86.047)"
-          : "oklch(54.6% 0.245 262.881)"
+          : status === "on_site"
+            ? "oklch(54.6% 0.245 262.881)"
+            : "oklch(69.6% 0.17 162.48)"
 
     return L.divIcon({
       className: "",
@@ -239,7 +241,7 @@ useEffect(() => {
 
                   {report.assignedTeam && (
                     <span className="text-sm text-emerald-600 block mb-2 font-medium">
-                      Assigned Team: {report.teamName || "Loading..."}
+                      Assigned : {report.teamName || "Loading..."}
                     </span>
                   )}
 

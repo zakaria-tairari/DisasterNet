@@ -31,28 +31,6 @@ const AdminDashboard = () => {
   const [userAccounts, setUserAccounts] = useState([]);
   const [pageLoading, setPageLoading] = useState(true);
 
-  const avgResponseTime = useMemo(() => {
-    if (!reports || reports.length === 0) return "0 min";
-
-    const validReports = reports.filter((r) => r.createdAt && r.onSiteAt);
-
-    if (validReports.length === 0) return "0 min";
-
-    const totalMs = validReports.reduce((sum, r) => {
-      const created = r.createdAt.toDate();
-      const onsite = r.onSiteAt.toDate();
-
-      return sum + (onsite - created);
-    }, 0);
-
-    const avgMs = totalMs / validReports.length;
-
-    const minutes = Math.floor(avgMs / 60000);
-    const seconds = Math.floor((avgMs % 60000) / 1000);
-
-    return `${minutes}m ${seconds}s`;
-  }, [reports]);
-
   useEffect(() => {
     const unsubscribe = () => {
       const q = query(
@@ -130,11 +108,6 @@ const AdminDashboard = () => {
             reports.filter((report) => report.status !== "resolved").length
           }
           description="Across all regions in the last 24h."
-        />
-        <MetricCard
-          title="Avg response time"
-          value={avgResponseTime}
-          description="Based on dispatched reports."
         />
         <MetricCard
           title="Accounts"

@@ -1,4 +1,3 @@
-// src/Notifications.jsx
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../firebase/config";
